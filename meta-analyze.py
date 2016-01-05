@@ -83,10 +83,15 @@ class Analyzer(object):
 
 class Hotnet2(Analyzer):
     def requires(self):
-        return (FMT_HOTNET2_EDGE)
+        return (FMT_HOTNET2_EDGE) #TODO dummy list
+
+class Networkx(Analyzer):
+    def requires(self):
+        return (FMT_GENE_LIST, FMT_2_COL_GENE_NETWORK)
 
 analyzers = {
-    Hotnet2()
+    Hotnet2(),
+    Networkx()
 }
 
 parsed = parsed_command_line()
