@@ -43,7 +43,9 @@ def input_files(parsed_args):
     """
     files=[]
     if parsed_args.plink_assoc_in:
-        files.append(InputFile("plink_assoc", parsed_args.plink_assoc_in.name))
+        files.append(InputFile(FMT_PLINK_ASSOC, parsed_args.plink_assoc_in.name))
+    if parsed_args.genemania_prot_prot_in:
+        files.append(InputFile(FMT_GENEMANIA_INTER, parsed_args.genemania_prot_prot_in.name))
     return files
 
 def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
@@ -61,10 +63,32 @@ def genemania_inter_to_hotnet2_edge(input_path_in_tuple, output_path):
     input_path = input_path_in_tuple[0]
     pass
 
-converters = {
-    ((FMT_PLINK_ASSOC),FMT_2_COL_GENE_NETWORK):plink_assoc_to_2_col_gene_network,
-    ((FMT_GENEMANIA_INTER),FMT_HOTNET2_EDGE):genemania_inter_to_hotnet2_edge
-}
+class Conversion(object):
+    def __init__(self, input_formats, output_format, function):
+        self.input_formats = input_formats
+        self.output_format = output_format
+        self.function = function
+    
+
+converters = (
+    Conversion((FMT_PLINK_ASSOC),
+               FMT_2_COL_GENE_NETWORK,
+               plink_assoc_to_2_col_gene_network),
+    Conversion((FMT_GENEMANIA_INTER),
+               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge)
+)
+
+def possible_inputs(starting_input_formats, converters):
+    possible = set(starting_input_formats)
+    old_size = len(possible)
+    while True:
+        for c in converters:
+            inputs = set(c.input_formats)
+            if inputs.issubset(possible):
+                possible.add(c.output_format)
+        if len(possible) == old_size:
+            break
+    return possible
 
 class Analyzer(object):
     def  __init__(self):
@@ -97,5 +121,7 @@ analyzers = {
 parsed = parsed_command_line()
 print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
-print "Could not run:" + ",".join(a.__class__.__name__ for a in analyzers if not a.can_run_with(avail))
-print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(avail))
+possible = possible_inputs([a.file_format for a in avail], converters)
+print "Possible: "+",".join(possible);
+print "Could not run:" + ",".join(a.__class__.__name__ for a in analyzers if not a.can_run_with(possible))
+print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
