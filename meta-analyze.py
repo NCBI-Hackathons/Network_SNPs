@@ -73,7 +73,7 @@ class Analyzer(object):
         """Return an iterable of the file formats required to do the
         analysis"""
         raise NotImplementedError()
-    def run_with(self, input_files):
+    def run_with(self, input_files, output_dir):
         """Run the analysis with the given input files"""
         raise NotImplementedError()
     def can_run_with(self, available_formats):
