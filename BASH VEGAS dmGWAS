@@ -1,0 +1,104 @@
+#Rough code by Megan Hagenauer Jan5 2016
+
+#make sure that you install gfortran on machine before
+
+R
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("graph")
+install.packages("igraph", repos='http://cran.us.r-project.org')
+#Originally I had this as repos=Null - but I think this new code should eliminate the prompt to choose a CRAN (which would spook a novice user)
+
+install.packages("corpcor", repos='http://cran.us.r-project.org')
+install.packages("mvtnorm", repos='http://cran.us.r-project.org')
+install.packages("plyr", repos='http://cran.us.r-project.org')
+
+#Reading in our SNP association data, extracting the correct columns, and outputting it into a new file.
+#Note: Depending on the datasource, the specified columns may need to be altered - should we run colnames to print the columnames to the screen and then prompt the user to specify which columns they wish to choose?
+
+SNPAssociationFile<-read.table("./testdata/phs000182.pha002890.txt", sep="\t", header=T)
+
+#Note: We need to extract out only the columns of data including the SNP names and p-values, no header:
+write.table(SNPAssociationFile[,c(1,2)], "TestData_OnlySNPs_pvalues.txt", quote=F, sep="\t",  col.names=F, row.names=F)
+
+
+q()
+
+#Getting the the VEGAS and dmGWAS program and files from the internet:
+wget http://bioinfo.mc.vanderbilt.edu/dmGWAS/dmGWAS_3.0.tar.gz
+wget http://gump.qimr.edu.au/VEGAS/vegas-0.8.27-hapmapCEU.tar.gz 
+R CMD INSTALL dmGWAS_3.0.tar.gz
+
+#Note: To make file extraction automatic, our program will need to be set to auto-update to the name of the downloaded file (because the file has a version name included in it):
+tar -xvzf vegas-0.8.27-hapmapCEU.tar.gz
+
+#Change directory to the folder Vegas
+cd VEGAS
+
+#Using Vegas to Convert a full tab-delimited text file containing 2 columns of data: SNP names and p-values (no header! no quotes!) to a gene level summary of p-values:
+./vegas ../TestData_OnlySNPs_pvalues.txt -pop hapmapCEU -out TestData_Gene_pvalues
+
+cd ../
+
+R
+#Eventually what I want:
+GenePvalues_textvector<-readLines("./VEGAS/TestData_Gene_pvalues.out")
+
+#Test version:
+GenePvalues_textvector<-readLines("./VEGAS/VegasPreOutput.temp")
+
+#Extracting out the rows of non-data that say "Starting chromosome…":
+GenePvalues_textvectorExtract<-grep("^Starting chromosome +", GenePvalues_textvector,  value=FALSE, invert=F)
+
+length(GenePvalues_textvectorExtract)
+
+GenePvalues_textvector[c(GenePvalues_textvectorExtract)]
+
+GenePvalues<-read.table(textConnection(GenePvalues_textvector[-c(GenePvalues_textvectorExtract)]), sep="", blank.lines.skip=T) 
+
+head(GenePvalues)
+
+#Check if this needs header=F and whether we need to trim down the matrix in order to feed it into dmGWAS or any other program:
+write.table(GenePvalues[,c(2,8)], "TestData_OnlyGeneNames_pvalues.txt", sep="\t", col.names=TRUE)
+
+geneweight<-GenePvalues[,c(2,8)]
+colnames(geneweight)<-c("gene", "weight")
+
+#dmGWAS chokes with p==0 and p==1), so we have to replace them
+geneweight[geneweight[,2]==1,2]<-0.999
+geneweight[geneweight[,2]==0,2]<-1e-06
+
+network<-read.table("./graphanalytics/genemania/COMBINED.DEFAULT_NETWORKS.BP_COMBINING_MAPPED.txt", sep="\t", header=F)
+
+head(network)
+colnames(network)<-c("interactorA", "interactorB")
+
+network<-network[,c(1,2)]
+
+library(dmGWAS)
+
+res.list<-dms(network, geneweight, expr1=NULL, expr2=NULL, d=1, r=0.1)
+
+library(plyr)
+
+#Calculating percentage rank:
+
+SeedGeneModuleScorePercentileRank<-rank(res.list$#ordered.module.score.matrix[,3])/length(res.list$#ordered.module.score.matrix[,3])
+
+temp<-data.frame(res.list$#ordered.module.score.matrix[,c(1,3)], SeedGeneModuleScorePercentileRank)
+
+#I may need to change the colnames for column 1 to get this to work once I see the output for actual file
+
+SummaryByGene<-join(temp, geneweight, by="Gene")
+
+Top1000ModuleScores<-res.list$#SummaryByGene[1000,]
+
+
+#The name of each module record is the seed gene:
+selected<-chooseModule(res.list, top=1000, plot=T)
+selected$modules
+
+
+
+
+
