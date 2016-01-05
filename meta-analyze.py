@@ -1,11 +1,11 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 
 import argparse
 
 # Constants giving names of file formats
 FMT_PLINK_ASSOC = 'plink_assoc'
-FMT_GENEMANIA_INTER ='genemania_interaction' 
-   # 3 columns tab-separated no header: 
+FMT_GENEMANIA_INTER ='genemania_interaction'
+   # 3 columns tab-separated no header:
    #
    # geneid [tab] gene_id [tab] weight
 
@@ -25,7 +25,7 @@ class InputFile(object):
         return "InputFile('{}','{}')".format(self.file_format, self.path)
 
 def parsed_command_line():
-    """Returns an object that results from parsing the command-line for this program argparse.ArgumentParser(...).parse_ags() 
+    """Returns an object that results from parsing the command-line for this program argparse.ArgumentParser(...).parse_ags()
     """
     parser = argparse.ArgumentParser(
         description='Run multiple network snp analysis algorithms');
@@ -33,7 +33,7 @@ def parsed_command_line():
                         help='Path to a plink association file https://www.cog-genomics.org/plink2/formats#assoc')
     parser.add_argument('--genemania_prot_prot_in', type=argparse.FileType('r'),
                         help='Path to a protein-protein-interaction network in 3-column genemania output format http://pages.genemania.org/data/')
-    
+
     return parser.parse_args()
 
 def input_files(parsed_args):
@@ -53,7 +53,7 @@ def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
 
 def genemania_inter_to_hotnet2_edge(input_path_in_tuple, output_path):
     """Create a new hotnet2_edge formatted file at output_path
-    
+
     Hotnet2 expects a list of edges in the form
     id [space] id [space] {}
     with no header
@@ -94,5 +94,3 @@ print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
 print "Could not run:" + ",".join(a.__class__.__name__ for a in analyzers if not a.can_run_with(avail))
 print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(avail))
-
-
