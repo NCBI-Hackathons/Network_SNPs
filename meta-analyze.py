@@ -4,9 +4,17 @@ import argparse
 
 # Constants giving names of file formats
 FMT_PLINK_ASSOC = 'plink_assoc'
-FMT_GENEMANIA_INTER ='genemania_interaction'
-FMT_HOTNET2_EDGE = 'hotnet2_edge'
-FMT_NETWORKX='networkx'
+FMT_GENEMANIA_INTER ='genemania_interaction' 
+   # 3 columns tab-separated no header: 
+   #
+   # geneid [tab] gene_id [tab] weight
+
+FMT_HOTNET2_EDGE = 'hotnet2_edge' # 3 columns space-separated no header:
+                                  # geneid geneid {}
+FMT_GENE_LIST='gene_list' # newline separated list of gene ids
+FMT_2_COL_GENE_NETWORK='networkx_2_col' # Tab-separated 2 column with
+                                        # gene ids from a gene list.
+                                        # No header.
 
 class InputFile(object):
     """Represents a data in a specified format"""
@@ -38,8 +46,8 @@ def input_files(parsed_args):
         files.append(InputFile("plink_assoc", parsed_args.plink_assoc_in.name))
     return files
 
-def plink_assoc_to_networkx(input_path_in_tuple, output_path):
-    """Create a new networkx formatted file at output_path"""
+def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
+    """Create a new networkx formatted interaction file at output_path"""
     input_path = input_path_in_tuple[0]
     pass
 
@@ -54,7 +62,7 @@ def genemania_inter_to_hotnet2_edge(input_path_in_tuple, output_path):
     pass
 
 converters = {
-    ((FMT_PLINK_ASSOC),FMT_NETWORKX):plink_assoc_to_networkx,
+    ((FMT_PLINK_ASSOC),FMT_2_COL_GENE_NETWORK):plink_assoc_to_2_col_gene_network,
     ((FMT_GENEMANIA_INTER),FMT_HOTNET2_EDGE):genemania_inter_to_hotnet2_edge
 }
 
