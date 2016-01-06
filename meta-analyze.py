@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import argparse
+import os
+import tempfile
 
 # Constants giving names of file formats
 FMT_PLINK_ASSOC = 'plink_assoc' # Treated as a list of locations to use
@@ -187,7 +189,7 @@ class Analyzer(object):
 
 class Hotnet2(Analyzer):
     def requires(self):
-        return (FMT_HOTNET2_EDGE,FMT_HOTNET2_GENE_IDEX, FMT_GENE_LIST) #TODO dummy list
+        return (FMT_HOTNET2_EDGE,FMT_HOTNET2_GENE_INDEX, FMT_GENE_LIST) #TODO dummy list
 
 class Networkx(Analyzer):
     def requires(self):
