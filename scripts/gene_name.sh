@@ -1,5 +1,6 @@
 #!/bin/bash
-
+#
+# ./gene_name.sh <snp_positions_fn> <gene_names_fn> <outdir>
 # Input: 1. dbGAP file (snp_positions_fn)
 #        2. 4-column file with chr, start, end, gene (gene_names_fn)
 #        3. directory to output files (outdir)
