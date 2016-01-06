@@ -15,6 +15,10 @@ FMT_GENE_LIST='gene_list' # newline separated list of gene ids
 FMT_2_COL_GENE_NETWORK='networkx_2_col' # Tab-separated 2 column with
                                         # gene ids from a gene list.
                                         # No header.
+FMT_PLINK_4_FUNSEQ='plink_4_funseq' # Tab separated 5 column
+                                    # chrom start stop ref alt
+                                    #
+                                    # chrom is in format "chr2"
 
 class InputFile(object):
     """Represents a data in a specified format"""
@@ -63,19 +67,34 @@ def genemania_inter_to_hotnet2_edge(input_path_in_tuple, output_path):
     input_path = input_path_in_tuple[0]
     pass
 
+def plink_assoc_to_plink_4_funseq(input_path_in_tuple, output_path):
+    """Create a new plink_4_funseq formatted file at output_path"""
+    input_path = input_path_in_tuple[0]
+    pass
+
+def plink_assoc_to_gene_list(input_path_in_tuple, output_path):
+    """Create a new gene_list formatted file at output_path"""
+    input_path = input_path_in_tuple[0]
+    pass
+
 class Conversion(object):
     def __init__(self, input_formats, output_format, function):
         self.input_formats = input_formats
         self.output_format = output_format
         self.function = function
-    
+
 
 converters = (
-    Conversion((FMT_PLINK_ASSOC),
+    Conversion((FMT_PLINK_ASSOC,),
                FMT_2_COL_GENE_NETWORK,
                plink_assoc_to_2_col_gene_network),
-    Conversion((FMT_GENEMANIA_INTER),
-               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge)
+    Conversion((FMT_PLINK_ASSOC,),
+               FMT_GENE_LIST,
+               plink_assoc_to_gene_list),
+    Conversion((FMT_GENEMANIA_INTER,),
+               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
+    Conversion((FMT_PLINK_ASSOC,),
+               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq)
 )
 
 def possible_inputs(starting_input_formats, converters):
@@ -88,6 +107,8 @@ def possible_inputs(starting_input_formats, converters):
                 possible.add(c.output_format)
         if len(possible) == old_size:
             break
+        else:
+            old_size = len(possible)
     return possible
 
 class Analyzer(object):
@@ -102,26 +123,32 @@ class Analyzer(object):
         raise NotImplementedError()
     def can_run_with(self, available_formats):
         """Return true if self.requires() is a subset of available_formats"""
-        unmet = set(self.requires()) - set(available_formats)
-        return False if unmet else true
+        return set(self.requires()).issubset(set(available_formats))
 
 class Hotnet2(Analyzer):
     def requires(self):
-        return (FMT_HOTNET2_EDGE) #TODO dummy list
+        return (FMT_HOTNET2_EDGE,) #TODO dummy list
 
 class Networkx(Analyzer):
     def requires(self):
         return (FMT_GENE_LIST, FMT_2_COL_GENE_NETWORK)
 
+class Funseq2(Analyzer):
+    def requires(self):
+        return (FMT_PLINK_4_FUNSEQ,)
+
 analyzers = {
     Hotnet2(),
-    Networkx()
+    Networkx(),
+    Funseq2()
 }
 
 parsed = parsed_command_line()
 print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
 possible = possible_inputs([a.file_format for a in avail], converters)
-print "Possible: "+",".join(possible);
+print "Possible: "+",".join(sorted(list(possible)));
 print "Could not run:" + ",".join(a.__class__.__name__ for a in analyzers if not a.can_run_with(possible))
 print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
+for a in analyzers:
+    print a.__class__.__name__, " requires: ", ",".join(a.requires())
