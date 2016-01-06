@@ -138,9 +138,9 @@ def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
     """Create a new heat_score_json formatted file at output_path"""
     input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_GENE_PVALUE
-    subprocess.call('python', '/home/ubuntu/ffrancis/hotnet2/hotnet2/generateHeat.py',
+    subprocess.call(['python', '/home/ubuntu/ffrancis/hotnet2/hotnet2/generateHeat.py',
                     'mutation', '--snv_file', input_path, '--output_file',
-                    output_path)
+                     output_path])
 
 class Conversion(object):
     def __init__(self, input_formats, output_format, function):
@@ -230,10 +230,10 @@ class Hotnet2(Analyzer):
         heat_score=path_for_format(input_files,FMT_HEAT_SCORE_JSON)
         influence=path_for_format(input_files,FMT_HOTNET2_INFLUENCE_MAT)
         g_index=path_for_format(input_files,FMT_HOTNET2_GENE_INDEX)
-        subprocess.call('python','/home/ubuntu/ffrancis/hotnet2/hotnet2/bin/findComponents.py',
+        subprocess.call(['python','/home/ubuntu/ffrancis/hotnet2/hotnet2/bin/findComponents.py',
                         '--infmat_file',influence,'--infmat_index_file',g_index,
                         '--heat_file',heat_score,'--deltas','0.1',
-                        '--min_cc_size',1,'--output_directory',output_dir, 'none')
+                         '--min_cc_size',1,'--output_directory',output_dir, 'none'])
 
 class Networkx(Analyzer):
     def requires(self):
@@ -242,8 +242,8 @@ class Networkx(Analyzer):
         print "Running",self.__class__.__name__, "writing to", output_dir
         gene_list = path_for_format(input_files, FMT_GENE_LIST)
         gene_net_2_col = path_for_format(input_files, FMT_2_COL_GENE_NETWORK)
-        subprocess.call("python","scripts/network_snps.py","--input",gene_list,
-                        "--network",gene_net_2_col, "--out", output_dir)
+        subprocess.call(["python","scripts/network_snps.py","--input",gene_list,
+                         "--network",gene_net_2_col, "--out", output_dir])
 
 
 class Funseq2(Analyzer):
