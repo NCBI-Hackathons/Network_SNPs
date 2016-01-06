@@ -1,90 +1,79 @@
+# Uses networkx library to calculate the degrees,betweenness centrality 
+# of the input genes. Also creates the XML format and PNG figure 
+# of the subnetwork with the input gene.
 #
-# run.py file.
-# Command line: python networkx_snps.py --input <file> --network <network>
+#
+# Command line: python networkx_snps.py --input <file> --network <network> --out
 #
 # pip install networkx
-# Networks should have gene names (concensus among networks (?))
-# Example:
-# python network_snps.py --input test/gene_list --network test/graph --out test/
+#
+# Input: 1. 1-column input file with gene names (input)
+#        2. 2-column input file with genes in column 1 and 2 that
+#           are interacting (network)
+#        3. Directory name for ouput (out)
+#
+# Output: 1. Figures of subnetworks --> <out directory>/pngs/
+#         2. XML format of subnetworks --> <out directory>/xm_format/
+#         3. <out directory>/output
 
 import argparse
 import networkx
-import itertools
 import matplotlib
 matplotlib.use('Agg')
-import HTML
 import os
 
-def html_report(gene_list,analysis,outdir):
-    outfn = "%s/report.html" % outdir
-    table_data = []
-    for counter, gene in enumerate(gene_list):
-        row = []
-        row.append(gene)
-        for measure in analysis:
-            row.append(analysis[measure][counter])
-        table_data.append(row)
-    header = ["gene"]
-    for measure in analysis:
-        header.append(measure)
-    htmlcode = HTML.table(table_data,header_row=header)
-    with open(outfn,'w') as f:
-        f.write(htmlcode)
-
-# Get cliques
-def get_cliques(network,gene,outdir):
-    if not os.path.exists("%s/clique" % outdir):
-        os.makedirs("%s/clique" % outdir)
-    cliques = networkx.cliques_containing_node(network,nodes=gene)
-    output_cliques = []
-    for counter,clique in enumerate(cliques):
-        if len(clique) > 2:
-            out_clique = list(itertools.combinations(clique,2))
-            out_clique = networkx.from_edgelist(out_clique)
-            out_cliquepng = "%s/clique/%s.%s.png" % (outdir,gene,counter)
-            networkx.draw_networkx(out_clique,with_labels=True)
-            matplotlib.pyplot.axis("off")
-            matplotlib.pyplot.savefig(out_cliquepng)
-            matplotlib.pyplot.close()
-            out_cliquefn = "%s/clique/%s.%s.xml" % (outdir,gene,counter)
-            networkx.write_graphml(out_clique,out_cliquefn)
-            output_cliques.append("<a href=\"%s\">clique</a>,<a href=\"%s\">xml format</a>" % (out_cliquepng,out_cliquefn))
-    return output_cliques
-
-# return subnetwork
-def get_subnetwork(network,gene):
-    neighbors = list(networkx.all_neighbors(network,gene))
-    edges = [(unicode(gene),neighbor) for neighbor in neighbors]
-    for neighbor in neighbors:
-        neighbor_neighbors = list(networkx.all_neighbors(network,neighbor))
-        add_edges = [(unicode(neighbor),neighbor_neighbor) for neighbor_neighbor in neighbor_neighbors]
-        edges += add_edges
-    subnetwork = networkx.from_edgelist(edges)
-    return subnetwork
+def write_networks(network,filename,outdir):
+    if not os.path.exists("%s/pngs" % outdir):
+        os.makedirs("%s/pngs" % outdir)
+    outpng = "%s/pngs/%s.png" % (outdir,filename)
+    networkx.draw_networkx(network,with_labels=True)
+    matplotlib.pyplot.axis("off")
+    matplotlib.pyplot.savefig(outpng)
+    matplotlib.pyplot.close()
+    if not os.path.exists("%s/xml_format" % outdir):
+        os.makedirs("%s/xml_format" % outdir)
+    outxmlfn = "%s/xml_format/%s.xml" % (outdir,filename)
+    networkx.write_graphml(network,outxmlfn)
 
 # Run all the analysis here
 def network_analysis(gene_list,network_file,outdir):
-    analysis = {}
+    outfn = "%s/output" % outdir
+    f = open(outfn,'w')
+    f.write("gene\tdegrees\tbtw_centrality\n")
     network = networkx.read_adjlist(network_file)
-    analysis['SUBGRAPH'] = []
-    analysis['BETWEENNESS_CENTRALITY'] = []
+    print "Number of edges in input graph: %s" % network.number_of_edges()
+    print "Number of nodes in input graph: %s" % network.number_of_nodes()
+    subnetwork = network.subgraph(gene_list)
+    print "Number of edges in subgraph: %s" % subnetwork.number_of_edges()
+    print "Number of nodes in subgraph: %s" % subnetwork.number_of_nodes()
+    bwt_central = networkx.betweenness_centrality(subnetwork)
+    degrees = subnetwork.degree(gene_list)
     for gene in gene_list:
-        subnetwork = get_subnetwork(network,gene)
-        bwt_central = networkx.betweenness_centrality(subnetwork)
-        cliques = get_cliques(subnetwork,gene,outdir)
-        analysis['SUBGRAPH'].append(cliques)
-        analysis['BETWEENNESS_CENTRALITY'].append(str(bwt_central[gene]))
-    return analysis
+        # Number of degrees
+        if gene in degrees:
+            num_degrees = degrees[gene]
+        else:
+            num_degress = "NA"
+        # Betweenness centrality
+        if gene in bwt_central:
+            btw_gene = bwt_central[gene]
+        else:
+            btw_gene = "NA"
+        # File with neighbor nodes
+        if subnetwork.has_node(gene):
+            neighbors = list(networkx.all_neighbors(subnetwork,gene))
+            edges = [(unicode(gene),neighbor) for neighbor in neighbors]
+            neighbor_networks = networkx.from_edgelist(edges)
+            write_networks(neighbor_networks,gene,outdir)
+        f.write("%s\t%s\t%s\n" % (gene,num_degrees,btw_gene))
+    f.close()
 
 # Get a list of gene names
 def load_gene_list(input_file):
     genes = []
     with open(input_file,'r') as f:
         for line in f:
-            if line.startswith('chr'):
-                pass
-            else:
-                genes.append(line.rstrip())
+            genes.append(line.rstrip())
     return genes
 
 if __name__ == '__main__':
@@ -94,6 +83,5 @@ if __name__ == '__main__':
     parser.add_argument('--out', type=str,required=True)
     args = parser.parse_args()
     gene_list = load_gene_list(args.input)
-    analysis = network_analysis(gene_list,args.network,args.out)
-    html_report(gene_list,analysis,args.out)
+    network_analysis(gene_list,args.network,args.out)
 
