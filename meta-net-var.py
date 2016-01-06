@@ -265,8 +265,8 @@ parsed = parsed_command_line()
 print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
 # Hard-coded paths
-avail.append(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat')
-avail.append(FMT_HOTNET2_GENE_INDEX,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_index_file.txt')
+avail.append(InputFile(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat'))
+avail.append(InputFile(FMT_HOTNET2_GENE_INDEX,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_index_file.txt'))
 possible = possible_inputs([a.file_format for a in avail], converters)
 temp_dir_path = tempfile.mkdtemp()
 print "Possible: "+",".join(sorted(list(possible)));
