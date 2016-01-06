@@ -131,10 +131,14 @@ def plink_assoc_to_plink_4_funseq(input_file_in_tuple, output_path):
     print "Command: "," ".join(command_list)
     subprocess.call(command_list)
 
-def plink_assoc_to_gene_list(input_files, output_path):
+def plink_4_funseq_and_location_2_gene_name_to_gene_list(input_files, output_path):
     """Create a new gene_list formatted file at output_path"""
     print "Converting "+",".join(str(f) for f in input_files)+" to "+FMT_GENE_LIST
-    pass
+    snp_positions=path_for_format(input_files, FMT_PLINK_4_FUNSEQ)
+    loc_to_gene=path_for_format(input_files, FMT_LOCATION_2_GENE_NAME)
+    command_list=['bash','scripts/gene_name.sh', snp_positions, loc_to_gene, output_path]
+    print "Command: "," ".join(command_list)
+    subprocess.call(command_list)
 
 def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
     """Create a new heat_score_json formatted file at output_path"""
@@ -157,9 +161,9 @@ converters = (
 #    Conversion((FMT_PLINK_ASSOC,),
 #               FMT_2_COL_GENE_NETWORK,
 #               plink_assoc_to_2_col_gene_network),
-#    Conversion((FMT_PLINK_4_FUNSEQ, FMT_LOCATION_2_GENE_NAME),
-#               FMT_GENE_LIST,
-#               plink_assoc_to_gene_list),
+    Conversion((FMT_PLINK_4_FUNSEQ, FMT_LOCATION_2_GENE_NAME),
+               FMT_GENE_LIST,
+               plink_4_funseq_and_location_2_gene_name_to_gene_list),
 #    Conversion((FMT_GENEMANIA_INTER,),
 #               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
 #    Conversion((FMT_PLINK_ASSOC,),
