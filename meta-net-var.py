@@ -233,7 +233,7 @@ class Hotnet2(Analyzer):
         subprocess.call(['python','/home/ubuntu/ffrancis/hotnet2/hotnet2/bin/findComponents.py',
                         '--infmat_file',influence,'--infmat_index_file',g_index,
                         '--heat_file',heat_score,'--deltas','0.1',
-                         '--min_cc_size',1,'--output_directory',output_dir, 'none'])
+                         '--min_cc_size','1','--output_directory',output_dir, 'none'])
 
 class Networkx(Analyzer):
     def requires(self):
