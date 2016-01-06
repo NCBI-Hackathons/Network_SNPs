@@ -1,6 +1,26 @@
-#Rough code by Megan Hagenauer Jan5 2016
+#NCBI Hackathon: Creating script to run a network analysis on GWAS data:
+##This script is specifically focused on creating a gene-level summary of p-values using VEGAS, and using dmGWAS, overlaying those p-values on a PPI network and finding "hot spot" subgraphs in the PPI network.  The output provides a subgraph and a measure of subnetwork score for each gene.
+#Megan Hagenauer, January 4-6 2016 
+
+#This script uses BASH (Linux x86_64)
+#Question: Many of these programs have different versions available for different platforms (e.g. Linux x86_64 vs. Linux i686)… do we need to generalize the code so that it will access and download the correct versions of the software?
+
+#########################################
+
+#Getting necessary programs installed for this analysis: 
 
 #make sure that you install gfortran on machine before
+sudo apt-get install gfortran
+
+	#Scrap code
+	#wget http://cran.r-project.org/bin/macosx/tools/gfortran-4.2.3.pkg
+	#tar fvxz gfortran-4.2.3.pkg
+
+	#curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
+	#sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
+
+
+#Installing dependencies in R:
 
 R
 
@@ -10,8 +30,29 @@ install.packages("igraph", repos='http://cran.us.r-project.org')
 #Originally I had this as repos=Null - but I think this new code should eliminate the prompt to choose a CRAN (which would spook a novice user)
 
 install.packages("corpcor", repos='http://cran.us.r-project.org')
-install.packages("mvtnorm", repos='http://cran.us.r-project.org')
-install.packages("plyr", repos='http://cran.us.r-project.org')
+
+q()
+
+#Getting the the VEGAS and dmGWAS program and files from the internet:
+wget http://bioinfo.mc.vanderbilt.edu/dmGWAS/dmGWAS_3.0.tar.gz
+wget http://gump.qimr.edu.au/VEGAS/vegas-0.8.27-hapmapCEU.tar.gz 
+wget http://pngu.mgh.harvard.edu/~purcell/plink/dist/plink-1.07-x86_64.zip
+
+#Plink seems to automatically install
+
+
+#Install VEGAS:
+#Note: To make file extraction automatic, our program will need to be set to auto-update to the name of the downloaded file (because the file has a version name included in it):
+tar -xvzf vegas-0.8.27-hapmapCEU.tar.gz
+
+#Install dmGWAS:
+R CMD INSTALL dmGWAS_3.0.tar.gz
+
+###################################
+
+#Getting SNP Association data in the right format and outputted:
+
+R
 
 #Reading in our SNP association data, extracting the correct columns, and outputting it into a new file.
 #Note: Depending on the datasource, the specified columns may need to be altered - should we run colnames to print the columnames to the screen and then prompt the user to specify which columns they wish to choose?
@@ -24,13 +65,12 @@ write.table(SNPAssociationFile[,c(1,2)], "TestData_OnlySNPs_pvalues.txt", quote=
 
 q()
 
-#Getting the the VEGAS and dmGWAS program and files from the internet:
-wget http://bioinfo.mc.vanderbilt.edu/dmGWAS/dmGWAS_3.0.tar.gz
-wget http://gump.qimr.edu.au/VEGAS/vegas-0.8.27-hapmapCEU.tar.gz 
-R CMD INSTALL dmGWAS_3.0.tar.gz
+###################################
 
-#Note: To make file extraction automatic, our program will need to be set to auto-update to the name of the downloaded file (because the file has a version name included in it):
-tar -xvzf vegas-0.8.27-hapmapCEU.tar.gz
+#Converting SNP Association data to a gene-level summary using VEGAS:
+
+#This process can be slow, so this command makes it so that the user can shut down their local computer while the process runs on the server:
+screen
 
 #Change directory to the folder Vegas
 cd VEGAS
@@ -40,44 +80,66 @@ cd VEGAS
 
 cd ../
 
+#####################################
+
+#Overlaying our Gene-level summary p-values onto a pre-created PPI network:
+
 R
-#Eventually what I want:
+
+#This code is going to need to be updated with actual file locations and default names:
+
+#Eventually what I want: (old server version)
 GenePvalues_textvector<-readLines("./VEGAS/TestData_Gene_pvalues.out")
 
-#Test version:
-GenePvalues_textvector<-readLines("./VEGAS/VegasPreOutput.temp")
+#New server version:
+GenePvalues_textvector<-readLines("./TestData_Gene_pvalues.out")
 
 #Extracting out the rows of non-data that say "Starting chromosome…":
-GenePvalues_textvectorExtract<-grep("^Starting chromosome +", GenePvalues_textvector,  value=FALSE, invert=F)
+#This may not be necessary with the final complete out file, only in incomplete files:
+#GenePvalues_textvectorExtract<-grep("^Starting chromosome +", GenePvalues_textvector,  value=FALSE, invert=F)
 
-length(GenePvalues_textvectorExtract)
+#length(GenePvalues_textvectorExtract)
 
-GenePvalues_textvector[c(GenePvalues_textvectorExtract)]
+#GenePvalues_textvector[c(GenePvalues_textvectorExtract)]
 
-GenePvalues<-read.table(textConnection(GenePvalues_textvector[-c(GenePvalues_textvectorExtract)]), sep="", blank.lines.skip=T) 
+#This chokes if there aren't any lines to extract:
+#GenePvalues<-read.table(textConnection(GenePvalues_textvector[-c(GenePvalues_textvectorExtract)]), sep="", blank.lines.skip=T, header=T) 
+
+#If so, this code is better:
+GenePvalues<-read.table(textConnection(GenePvalues_textvector), sep="", blank.lines.skip=T, header=T) 
 
 head(GenePvalues)
 
-#Check if this needs header=F and whether we need to trim down the matrix in order to feed it into dmGWAS or any other program:
-write.table(GenePvalues[,c(2,8)], "TestData_OnlyGeneNames_pvalues.txt", sep="\t", col.names=TRUE)
-
 geneweight<-GenePvalues[,c(2,8)]
 colnames(geneweight)<-c("gene", "weight")
+
+#Check if this needs header=F and whether we need to trim down the matrix in order to feed it into dmGWAS or any other program:
+write.table(geneweight, "TestData_OnlyGeneNames_pvalues.txt", sep="\t", col.names=TRUE)
 
 #dmGWAS chokes with p==0 and p==1), so we have to replace them
 geneweight[geneweight[,2]==1,2]<-0.999
 geneweight[geneweight[,2]==0,2]<-1e-06
 
+#On old server:
 network<-read.table("./graphanalytics/genemania/COMBINED.DEFAULT_NETWORKS.BP_COMBINING_MAPPED.txt", sep="\t", header=F)
 
+#On new server:
+network<-read.table("./COMBINED.DEFAULT_NETWORKS.BP_COMBINING_MAPPED.txt", sep="\t", header=F)
+
+#Getting the network data in the correct format:
 head(network)
-colnames(network)<-c("interactorA", "interactorB")
 
 network<-network[,c(1,2)]
+colnames(network)<-c("interactorA", "interactorB")
 
 library(dmGWAS)
 
+#Note: this is just using the recommended settings. Tweaking r can change the strictness of the p-values for what is included in the network formation. Making R larger can reduce network size and computing time:
 res.list<-dms(network, geneweight, expr1=NULL, expr2=NULL, d=1, r=0.1)
+
+######################################################################
+
+#Dense module search: Pulling out subnetwork information for each top gene and creating useful output
 
 library(plyr)
 
@@ -91,12 +153,21 @@ temp<-data.frame(res.list$#ordered.module.score.matrix[,c(1,3)], SeedGeneModuleS
 
 SummaryByGene<-join(temp, geneweight, by="Gene")
 
+#The top genes with their normalized module scores and percentile rank:
 Top1000ModuleScores<-res.list$#SummaryByGene[1000,]
-
 
 #The name of each module record is the seed gene:
 selected<-chooseModule(res.list, top=1000, plot=T)
+
+#This is a list of the top 1000 genes with their respective subnetworks, listed in order of strength:
 selected$modules
+
+#Where should this output go????
+
+##############################
+
+
+
 
 
 
