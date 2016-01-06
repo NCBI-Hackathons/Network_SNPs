@@ -34,6 +34,15 @@ FMT_HOTNET2_GENE_INDEX='hotnet2_gene_index' # 2 col space separated
                                             # gene number (used in edge file)
                                             # gene name (from gene list file)
 
+FMT_GENE_PVALUE='gene_pvalue_file' # 2 column tab separated
+                                   # gene_name
+                                   # aggregate_p_value as a float in decimal
+
+FMT_HOTNET2_INFLUENCE_MAT='hotnet_influence_mat'
+
+
+FMT_HEAT_SCORE_JSON='hotnet_heat_score_json'
+
 class InputFile(object):
     """Represents a data in a specified format"""
     def __init__(self, file_format, path):
@@ -54,7 +63,6 @@ def readable_dir(prospective_dir):
         return prospective_dir
     else:
         raise Exception("Can't read from {0}".format(prospective_dir))
-
 
 def parsed_command_line():
     """Returns an object that results from parsing the command-line for this program argparse.ArgumentParser(...).parse_ags()
