@@ -171,14 +171,14 @@ def all_inputs(starting_input_files, converters, path_for_created):
             old_num_formats = new_num_formats
     return files
 
-def file_for_format(input_files, file_format):
+def path_for_format(input_files, file_format):
     f = [fil for fil in input_files if fil.file_format == file_format]
     if len(f) > 1:
         raise RuntimeError("Multiple files for a given format not supported")
     elif len(f) == 0:
         return None
     else:
-        return f[0]
+        return f[0].path
 
 
 class Analyzer(object):
