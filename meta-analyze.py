@@ -55,6 +55,7 @@ def input_files(parsed_args):
 def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
     """Create a new networkx formatted interaction file at output_path"""
     input_path = input_path_in_tuple[0]
+    print "Converting "+input_path+" to "+FMT_2_COL_GENE_NETWORK
     pass
 
 def genemania_inter_to_hotnet2_edge(input_path_in_tuple, output_path):
@@ -65,16 +66,19 @@ def genemania_inter_to_hotnet2_edge(input_path_in_tuple, output_path):
     with no header
     """
     input_path = input_path_in_tuple[0]
+    print "Converting "+input_path+" to "+FMT_HOTNET2_EDGE
     pass
 
 def plink_assoc_to_plink_4_funseq(input_path_in_tuple, output_path):
     """Create a new plink_4_funseq formatted file at output_path"""
     input_path = input_path_in_tuple[0]
+    print "Converting "+input_path+" to "+FMT_PLINK_4_FUNSEQ
     pass
 
 def plink_assoc_to_gene_list(input_path_in_tuple, output_path):
     """Create a new gene_list formatted file at output_path"""
     input_path = input_path_in_tuple[0]
+    print "Converting "+input_path+" to "+FMT_GENE_LIST
     pass
 
 class Conversion(object):
