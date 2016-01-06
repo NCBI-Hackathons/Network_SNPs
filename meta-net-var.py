@@ -265,7 +265,7 @@ class Funseq2(Analyzer):
 analyzers = {
     Hotnet2(),
     Networkx(),
-#    Funseq2()
+    Funseq2()
 }
 
 parsed = parsed_command_line()
@@ -275,9 +275,8 @@ avail = input_files(parsed)
 avail.append(InputFile(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat'))
 avail.append(InputFile(FMT_HOTNET2_GENE_INDEX,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_index_file.txt'))
 possible = possible_inputs([a.file_format for a in avail], converters)
-temp_dir_path = tempfile.mkdtemp()
+temp_dir_path = tempfile.mkdtemp(prefix='meta-net-var')
 print "Possible: "+",".join(sorted(list(possible)));
-print "Could not run:" + ",".join(a.__class__.__name__+" is missing:"+",".join(a.missing(possible)) for a in analyzers if not a.can_run_with(possible))
 print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
 print "Converting inputs"
 inputs = all_inputs(avail, converters, temp_dir_path)
@@ -293,7 +292,8 @@ for analyzer in analyzers:
         except OSError:
             print "Could not run", a_name, "because", a_path, " was already in existence"
 
-print 'Not removing temp directory for debugging:'
-print 'Tempdir is:'
-print temp_dir_path
-#shutil.rmtree(temp_dir_path)
+print "Could not run:" + ",".join(a.__class__.__name__+" is missing:"+",".join(a.missing(possible)) for a in analyzers if not a.can_run_with(possible))
+#print 'Not removing temp directory for debugging:'
+#print 'Tempdir is:'
+#print temp_dir_path
+shutil.rmtree(temp_dir_path)
