@@ -239,6 +239,14 @@ print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_r
 print "Converting inputs"
 inputs = all_inputs(avail, converters, temp_dir_path)
 print "Files after conversions:",",".join(f.path for f in inputs)
-
+for analyzer in analyzers:
+    a_name = analyzer.__class__.__name__
+    print "Running", a_name
+    a_path = os.path.join(parsed.output_dir, a_name)
+    try:
+        os.makedirs(a_path)
+        analyzer.run_with(inputs, a_path)
+    except OSError:
+        print "Could not run", a_name, "because", a_path, " was already in existence"
 
 shutil.rmtree(temp_dir_path)
