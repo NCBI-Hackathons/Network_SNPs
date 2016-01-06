@@ -263,7 +263,7 @@ class Funseq2(Analyzer):
 
 
 analyzers = {
-#    Hotnet2(),
+    Hotnet2(),
     Networkx(),
 #    Funseq2()
 }
