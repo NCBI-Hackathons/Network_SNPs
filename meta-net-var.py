@@ -171,6 +171,16 @@ def all_inputs(starting_input_files, converters, path_for_created):
             old_num_formats = new_num_formats
     return files
 
+def file_for_format(input_files, file_format):
+    f = [fil for fil in input_files if fil.file_format == file_format]
+    if len(f) > 1:
+        raise RuntimeError("Multiple files for a given format not supported")
+    elif len(f) == 0:
+        return None
+    else:
+        return f[0]
+
+
 class Analyzer(object):
     def  __init__(self):
        pass
@@ -218,4 +228,6 @@ print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_r
 print "Converting inputs"
 inputs = all_inputs(avail, converters, temp_dir_path)
 print "Files after conversions:",",".join(f.path for f in inputs)
+
+
 shutil.rmtree(temp_dir_path)
