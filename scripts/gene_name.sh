@@ -3,7 +3,7 @@
 # ./gene_name.sh <snp_positions_fn> <gene_names_fn> <out_gene_list>
 # Input: 1. dbGAP file (snp_positions_fn)
 #        2. 4-column file with chr, start, end, gene (gene_names_fn)
-#        3. directory to output files (out_gene_list)
+#        3. output file name (out_gene_list)
 #
 # Output: 1. 1-column file with a list of genes
 
