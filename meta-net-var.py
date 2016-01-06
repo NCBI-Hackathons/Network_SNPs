@@ -48,11 +48,11 @@ def readable_dir(prospective_dir):
     and not tested
     """
     if not os.path.isdir(prospective_dir):
-        raise Exception("readable_dir:{0} is not a valid path".format(prospective_dir))
+        raise Exception("{0} is not a pre-existing readable directory path".format(prospective_dir))
     if os.access(prospective_dir, os.R_OK):
         return prospective_dir
     else:
-        raise Exception("readable_dir:{0} is not a readable dir".format(prospective_dir))
+        raise Exception("Can't read from {0}".format(prospective_dir))
 
 
 def parsed_command_line():
