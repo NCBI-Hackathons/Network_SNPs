@@ -75,6 +75,8 @@ def parsed_command_line():
                         help='Path to a protein-protein-interaction network in 3-column genemania output format http://pages.genemania.org/data/')
     parser.add_argument('--location_2_gene_name', type=argparse.FileType('r'),
                         help='mapping of locations to gene names. Must be same names as used in network. 4 column tab separated: chromosme start end gene_name')
+    parser.add_argument('--gene_p_value', type=argparse.FileType('r'),
+                        help='2 column tab separated no header: gene_name [tab] aggregate_p_value')
     parser.add_argument('--output_dir', type=readable_dir, required=True,
                         help='The output directory where everything will dump its output')
     return parser.parse_args()
@@ -91,6 +93,8 @@ def input_files(parsed_args):
         files.append(InputFile(FMT_GENEMANIA_INTER, parsed_args.genemania_prot_prot_in.name))
     if parsed_args.location_2_gene_name:
         files.append(InputFile(FMT_LOCATION_2_GENE_NAME, parsed_args.location_2_gene_name.name))
+    if parsed_args.gene_p_value:
+        files.append(InputFile(FMT_GENE_PVALUE, parsed_args.gene_p_value.name))
     return files
 
 def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
