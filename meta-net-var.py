@@ -97,33 +97,47 @@ def input_files(parsed_args):
         files.append(InputFile(FMT_GENE_PVALUE, parsed_args.gene_p_value.name))
     return files
 
-def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
+def path_for_format(input_files, file_format):
+    f = [fil for fil in input_files if fil.file_format == file_format]
+    if len(f) > 1:
+        raise RuntimeError("Multiple files for a given format not supported")
+    elif len(f) == 0:
+        return None
+    else:
+        return f[0].path
+
+def plink_assoc_to_2_col_gene_network(input_file_in_tuple, output_path):
     """Create a new networkx formatted interaction file at output_path"""
-    input_path = input_path_in_tuple[0]
+    input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_2_COL_GENE_NETWORK
     pass
 
-def genemania_inter_to_hotnet2_edge(input_path_in_tuple, output_path):
+def genemania_inter_to_hotnet2_edge(input_file_in_tuple, output_path):
     """Create a new hotnet2_edge formatted file at output_path
 
     Hotnet2 expects a list of edges in the form
     id [space] id [space] {}
     with no header
     """
-    input_path = input_path_in_tuple[0]
+    input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_HOTNET2_EDGE
     pass
 
-def plink_assoc_to_plink_4_funseq(input_path_in_tuple, output_path):
+def plink_assoc_to_plink_4_funseq(input_file_in_tuple, output_path):
     """Create a new plink_4_funseq formatted file at output_path"""
-    input_path = input_path_in_tuple[0]
+    input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_PLINK_4_FUNSEQ
     pass
 
-def plink_assoc_to_gene_list(input_path_in_tuple, output_path):
+def plink_assoc_to_gene_list(input_files, output_path):
     """Create a new gene_list formatted file at output_path"""
-    input_path = input_path_in_tuple[0]
-    print "Converting "+input_path+" to "+FMT_GENE_LIST
+    print "Converting "+",".join(input_files)+" to "+FMT_GENE_LIST
+    pass
+
+def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
+    """Create a new heat_score_json formatted file at output_path"""
+    input_path = input_file_in_tuple[0].path
+    print "Converting "+input_path+" to "+FMT_GENE_PVALUE
     pass
 
 class Conversion(object):
@@ -137,13 +151,15 @@ converters = (
     Conversion((FMT_PLINK_ASSOC,),
                FMT_2_COL_GENE_NETWORK,
                plink_assoc_to_2_col_gene_network),
-    Conversion((FMT_PLINK_ASSOC,),
+    Conversion((FMT_PLINK_4_FUNSEQ, FMT_LOCATION_2_GENE_NAME),
                FMT_GENE_LIST,
                plink_assoc_to_gene_list),
     Conversion((FMT_GENEMANIA_INTER,),
                FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
     Conversion((FMT_PLINK_ASSOC,),
-               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq)
+               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
+    Conversion((FMT_GENE_PVALUE,),
+               FMT_HEAT_SCORE_JSON, gene_pvalue_to_heat_score_json)
 )
 
 def possible_inputs(starting_input_formats, converters):
@@ -173,9 +189,9 @@ def all_inputs(starting_input_files, converters, path_for_created):
                if inputs.issubset(set(formats(files))):
                    new_path = os.path.join(path_for_created, c.output_format)
                    new_file = InputFile(c.output_format, new_path)
-                   input_paths = [f.path for f in files if f.file_format
+                   input_files = [f for f in files if f.file_format
                                   in c.input_formats]
-                   c.function(input_paths, new_path)
+                   c.function(input_files, new_path)
                    files.append(new_file)
         new_num_formats = len(set(formats(files)))
         if new_num_formats == old_num_formats:
@@ -204,21 +220,18 @@ class Analyzer(object):
         """Return list of missing items"""
         return set(self.requires()) - set(available_formats)
 
-def path_for_format(input_files, file_format):
-    f = [fil for fil in input_files if fil.file_format == file_format]
-    if len(f) > 1:
-        raise RuntimeError("Multiple files for a given format not supported")
-    elif len(f) == 0:
-        return None
-    else:
-        return f[0].path
-
 class Hotnet2(Analyzer):
     def requires(self):
-        return (FMT_HOTNET2_EDGE,FMT_HOTNET2_GENE_INDEX, FMT_GENE_LIST) #TODO dummy list
+        return (FMT_HEAT_SCORE_JSON,FMT_HOTNET2_INFLUENCE_MAT, FMT_HOTNET2_GENE_INDEX) #TODO dummy list
     def run_with(self, input_files, output_dir):
         print "Running",self.__class__.__name__, "writing to", output_dir
-        # TODO finish implementing
+        heat_score=path_for_format(input_files,FMT_HEAT_SCORE_JSON)
+        influence=path_for_format(input_files,FMT_HOTNET2_INFLUENCE_MAT)
+        g_index=path_for_format(input_files,FMT_HOTNET2_GENE_INDEX)
+        subprocess.call('python','/home/ubuntu/ffrancis/hotnet2/hotnet2/bin/findComponents.py',
+                        '--infmat_file',influence,'--infmat_index_file',g_index,
+                        '--heat_file',heat_score,'--deltas','0.1',
+                        '--min_cc_size',1,'--output_directory',output_dir, 'none')
 
 class Networkx(Analyzer):
     def requires(self):
@@ -249,6 +262,9 @@ analyzers = {
 parsed = parsed_command_line()
 print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
+# Hard-coded paths
+avail.append(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat')
+avail.append(FMT_HOTNET2_GENE_INDEX,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_index_file.txt')
 possible = possible_inputs([a.file_format for a in avail], converters)
 temp_dir_path = tempfile.mkdtemp()
 print "Possible: "+",".join(sorted(list(possible)));
