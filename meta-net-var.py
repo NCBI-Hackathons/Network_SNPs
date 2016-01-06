@@ -127,7 +127,7 @@ def plink_assoc_to_plink_4_funseq(input_file_in_tuple, output_path):
     """Create a new plink_4_funseq formatted file at output_path"""
     input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_PLINK_4_FUNSEQ
-    command_list=['php', 'dbvartofunseq.php', input_path, output_path]
+    command_list=['bash','dbvartofunseq.sh', input_path, output_path]
     print "Command: "," ".join(command_list)
     subprocess.call(command_list)
 
@@ -166,8 +166,8 @@ converters = (
                plink_4_funseq_and_location_2_gene_name_to_gene_list),
 #    Conversion((FMT_GENEMANIA_INTER,),
 #               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
-#    Conversion((FMT_PLINK_ASSOC,),
-#               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
+    Conversion((FMT_PLINK_ASSOC,),
+               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
     Conversion((FMT_GENE_PVALUE,),
                FMT_HEAT_SCORE_JSON, gene_pvalue_to_heat_score_json),
 )
