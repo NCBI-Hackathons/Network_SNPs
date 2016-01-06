@@ -136,6 +136,9 @@ class Analyzer(object):
     def can_run_with(self, available_formats):
         """Return true if self.requires() is a subset of available_formats"""
         return set(self.requires()).issubset(set(available_formats))
+    def missing(self, available_formats):
+        """Return list of missing items"""
+        return set(self.requires()) - set(available_formats)
 
 class Hotnet2(Analyzer):
     def requires(self):
@@ -160,7 +163,7 @@ print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
 possible = possible_inputs([a.file_format for a in avail], converters)
 print "Possible: "+",".join(sorted(list(possible)));
-print "Could not run:" + ",".join(a.__class__.__name__ for a in analyzers if not a.can_run_with(possible))
+print "Could not run:" + ",".join(a.__class__.__name__+" is missing:"+",".join(a.missing(possible)) for a in analyzers if not a.can_run_with(possible))
 print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
 for a in analyzers:
     print a.__class__.__name__, " requires: ", ",".join(a.requires())
