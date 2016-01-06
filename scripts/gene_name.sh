@@ -15,5 +15,5 @@ temp_dir=`mktemp -d`
 sort -k1,1 -k2,2n ${snp_positions_fn} > ${temp_dir}/${snp_positions_fn}.sorted
 sort -k1,1 -k2,2n ${gene_names_fn} > ${temp_dir}/${gene_names_fn}.sorted
 
-bedtools intersect -wb -a ${temp_dir}/${snp_positions_fn}.sorted -b ${temp_dir}/${gene_names_fn}.sorted | cut -f3 > ${out_gene_list}
+bedtools intersect -wb -a ${temp_dir}/${snp_positions_fn}.sorted -b ${temp_dir}/${gene_names_fn}.sorted | cut -f4 > ${out_gene_list}
 rm -fr ${temp_dir}
