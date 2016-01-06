@@ -66,7 +66,7 @@ def parsed_command_line():
                         help='Path to a protein-protein-interaction network in 3-column genemania output format http://pages.genemania.org/data/')
     parser.add_argument('--location_2_gene_name', type=argparse.FileType('r'),
                         help='mapping of locations to gene names. Must be same names as used in network. 4 column tab separated: chromosme start end gene_name')
-    parser.add_argument('--output_dir', type=readable_dir,
+    parser.add_argument('--output_dir', type=readable_dir, required=True,
                         help='The output directory where everything will dump its output')
     return parser.parse_args()
 
