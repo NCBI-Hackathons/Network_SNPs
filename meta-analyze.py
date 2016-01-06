@@ -11,6 +11,7 @@ FMT_GENEMANIA_INTER ='genemania_interaction'
 
 FMT_HOTNET2_EDGE = 'hotnet2_edge' # 3 columns space-separated no header:
                                   # geneid geneid {}
+                                  # geneid must be integer
 FMT_GENE_LIST='gene_list' # newline separated list of gene ids
 FMT_2_COL_GENE_NETWORK='networkx_2_col' # Tab-separated 2 column with
                                         # gene ids from a gene list.
