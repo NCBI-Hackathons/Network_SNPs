@@ -19,6 +19,11 @@ FMT_PLINK_4_FUNSEQ='plink_4_funseq' # Tab separated 5 column
                                     # chrom start stop ref alt
                                     #
                                     # chrom is in format "chr2"
+FMT_LOCATION_2_GENE_NAME='location_2_gene_name' # Tab separated 4 col No header
+                                                # chromosome
+                                                # start pos
+                                                # end pos
+                                                # gene name
 
 class InputFile(object):
     """Represents a data in a specified format"""
@@ -37,7 +42,8 @@ def parsed_command_line():
                         help='Path to a plink association file https://www.cog-genomics.org/plink2/formats#assoc')
     parser.add_argument('--genemania_prot_prot_in', type=argparse.FileType('r'),
                         help='Path to a protein-protein-interaction network in 3-column genemania output format http://pages.genemania.org/data/')
-
+    parser.add_argument('--location_2_gene_name', type=argparse.FileType('r'),
+                        help='mapping of locations to gene names. Must be same names as used in network. 4 column tab separated: chromosme start end gene_name')
     return parser.parse_args()
 
 def input_files(parsed_args):
@@ -50,6 +56,8 @@ def input_files(parsed_args):
         files.append(InputFile(FMT_PLINK_ASSOC, parsed_args.plink_assoc_in.name))
     if parsed_args.genemania_prot_prot_in:
         files.append(InputFile(FMT_GENEMANIA_INTER, parsed_args.genemania_prot_prot_in.name))
+    if parsed_args.location_2_gene_name:
+        files.append(InputFile(FMT_LOCATION_2_GENE_NAME, parsed_args.location_2_gene_name))
     return files
 
 def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
@@ -135,7 +143,7 @@ class Hotnet2(Analyzer):
 
 class Networkx(Analyzer):
     def requires(self):
-        return (FMT_GENE_LIST, FMT_2_COL_GENE_NETWORK)
+        return (FMT_GENE_LIST, FMT_2_COL_GENE_NETWORK, FMT_LOCATION_2_GENE_NAME)
 
 class Funseq2(Analyzer):
     def requires(self):
