@@ -80,7 +80,7 @@ def input_files(parsed_args):
     if parsed_args.genemania_prot_prot_in:
         files.append(InputFile(FMT_GENEMANIA_INTER, parsed_args.genemania_prot_prot_in.name))
     if parsed_args.location_2_gene_name:
-        files.append(InputFile(FMT_LOCATION_2_GENE_NAME, parsed_args.location_2_gene_name))
+        files.append(InputFile(FMT_LOCATION_2_GENE_NAME, parsed_args.location_2_gene_name.name))
     return files
 
 def plink_assoc_to_2_col_gene_network(input_path_in_tuple, output_path):
