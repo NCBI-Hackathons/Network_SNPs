@@ -246,6 +246,8 @@ class Networkx(Analyzer):
         gene_net_2_col = path_for_format(input_files, FMT_2_COL_GENE_NETWORK)
         command_list = ["python","scripts/network_snps.py","--input",gene_list,
                          "--network",gene_net_2_col, "--out", output_dir]
+        print "Command:"," ".join(command_list)
+        subprocess.call(command_list)
 
 
 class Funseq2(Analyzer):
@@ -275,6 +277,7 @@ avail = input_files(parsed)
 avail.append(InputFile(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat'))
 avail.append(InputFile(FMT_HOTNET2_GENE_INDEX,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_index_file.txt'))
 avail.append(InputFile(FMT_2_COL_GENE_NETWORK,'/home/ubuntu/Data/geneMania.network'))
+avail.append(InputFile(FMT_GENE_LIST,'/home/ubuntu/oscarlr/Network_SNPs/Network_SNPs/test/gene_names'))
 possible = possible_inputs([a.file_format for a in avail], converters)
 temp_dir_path = tempfile.mkdtemp(prefix='meta-net-var')
 print "Possible: "+",".join(sorted(list(possible)));
