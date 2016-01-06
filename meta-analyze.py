@@ -25,6 +25,10 @@ FMT_LOCATION_2_GENE_NAME='location_2_gene_name' # Tab separated 4 col No header
                                                 # end pos
                                                 # gene name
 
+FMT_HOTNET2_GENE_INDEX='hotnet2_gene_index' # 2 col space separated
+                                            # gene number (used in edge file)
+                                            # gene name (from gene list file)
+
 class InputFile(object):
     """Represents a data in a specified format"""
     def __init__(self, file_format, path):
@@ -142,7 +146,7 @@ class Analyzer(object):
 
 class Hotnet2(Analyzer):
     def requires(self):
-        return (FMT_HOTNET2_EDGE,) #TODO dummy list
+        return (FMT_HOTNET2_EDGE,FMT_HOTNET2_GENE_IDEX, FMT_GENE_LIST) #TODO dummy list
 
 class Networkx(Analyzer):
     def requires(self):
@@ -151,6 +155,7 @@ class Networkx(Analyzer):
 class Funseq2(Analyzer):
     def requires(self):
         return (FMT_PLINK_4_FUNSEQ,)
+
 
 analyzers = {
     Hotnet2(),
