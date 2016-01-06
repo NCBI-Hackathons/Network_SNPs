@@ -144,6 +144,30 @@ def possible_inputs(starting_input_formats, converters):
             old_size = len(possible)
     return possible
 
+def formats(files):
+    return [f.file_format for f in files]
+
+def all_inputs(starting_input_files, converters, path_for_created):
+    files = starting_input_files
+    old_num_formats = len(set(formats(files)))
+    while True:
+        for c in converters:
+            if c.output_format not in formats(files):
+               inputs = set(c.input_formats)
+               if inputs.issubset(set(formats(files))):
+                   new_path = os.path.join(path_for_created, c.output_format)
+                   new_file = InputFile(c.output_format, new_path)
+                   input_paths = [f.path for f in files if f.file_format
+                                  in c.input_formats]
+                   c.function(input_paths, new_path)
+                   files.append(new_file)
+        new_num_formats = len(set(formats(files)))
+        if new_num_formats == old_num_formats:
+            break
+        else:
+            old_num_formats = new_num_formats
+    return files
+
 class Analyzer(object):
     def  __init__(self):
        pass
