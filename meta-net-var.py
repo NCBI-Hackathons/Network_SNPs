@@ -238,7 +238,7 @@ class Hotnet2(Analyzer):
                          '--min_cc_size','1','--output_directory',output_dir, 'none']
         print "Command:"," ".join(command_list)
         subprocess.call(command_list)
-        
+
 
 class Networkx(Analyzer):
     def requires(self):
@@ -247,8 +247,10 @@ class Networkx(Analyzer):
         print "Running",self.__class__.__name__, "writing to", output_dir
         gene_list = path_for_format(input_files, FMT_GENE_LIST)
         gene_net_2_col = path_for_format(input_files, FMT_2_COL_GENE_NETWORK)
-        subprocess.call(["python","scripts/network_snps.py","--input",gene_list,
-                         "--network",gene_net_2_col, "--out", output_dir])
+        command_list = ["python","scripts/network_snps.py","--input",gene_list,
+                         "--network",gene_net_2_col, "--out", output_dir]
+        print "Command:"," ".join(command_list)
+        subprocess.call(command_list)
 
 
 class Funseq2(Analyzer):
