@@ -165,5 +165,3 @@ possible = possible_inputs([a.file_format for a in avail], converters)
 print "Possible: "+",".join(sorted(list(possible)));
 print "Could not run:" + ",".join(a.__class__.__name__+" is missing:"+",".join(a.missing(possible)) for a in analyzers if not a.can_run_with(possible))
 print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
-for a in analyzers:
-    print a.__class__.__name__, " requires: ", ",".join(a.requires())
