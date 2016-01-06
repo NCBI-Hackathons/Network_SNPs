@@ -138,7 +138,9 @@ def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
     """Create a new heat_score_json formatted file at output_path"""
     input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_GENE_PVALUE
-    pass
+    subprocess.call('python', '/home/ubuntu/ffrancis/hotnet2/hotnet2/generateHeat.py',
+                    'mutation', '--snv_file', input_file, '--output_file',
+                    output_path)
 
 class Conversion(object):
     def __init__(self, input_formats, output_format, function):
