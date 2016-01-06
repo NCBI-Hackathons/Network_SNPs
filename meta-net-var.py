@@ -4,6 +4,7 @@ import argparse
 import os
 import tempfile
 import shutil
+import subprocess
 
 # Constants giving names of file formats
 FMT_PLINK_ASSOC = 'plink_assoc' # Treated as a list of locations to use
@@ -171,16 +172,6 @@ def all_inputs(starting_input_files, converters, path_for_created):
             old_num_formats = new_num_formats
     return files
 
-def path_for_format(input_files, file_format):
-    f = [fil for fil in input_files if fil.file_format == file_format]
-    if len(f) > 1:
-        raise RuntimeError("Multiple files for a given format not supported")
-    elif len(f) == 0:
-        return None
-    else:
-        return f[0].path
-
-
 class Analyzer(object):
     def  __init__(self):
        pass
@@ -189,7 +180,10 @@ class Analyzer(object):
         analysis"""
         raise NotImplementedError()
     def run_with(self, input_files, output_dir):
-        """Run the analysis with the given input files"""
+        """Run the analysis with the given input files
+        input_files iterable list of InputFile objects
+        output_dir string pathname to output directory
+        """
         raise NotImplementedError()
     def can_run_with(self, available_formats):
         """Return true if self.requires() is a subset of available_formats"""
@@ -197,6 +191,15 @@ class Analyzer(object):
     def missing(self, available_formats):
         """Return list of missing items"""
         return set(self.requires()) - set(available_formats)
+
+def path_for_format(input_files, file_format):
+    f = [fil for fil in input_files if fil.file_format == file_format]
+    if len(f) > 1:
+        raise RuntimeError("Multiple files for a given format not supported")
+    elif len(f) == 0:
+        return None
+    else:
+        return f[0].path
 
 class Hotnet2(Analyzer):
     def requires(self):
@@ -207,10 +210,13 @@ class Hotnet2(Analyzer):
 
 class Networkx(Analyzer):
     def requires(self):
-        return (FMT_GENE_LIST, FMT_2_COL_GENE_NETWORK, FMT_LOCATION_2_GENE_NAME)
+        return (FMT_GENE_LIST, FMT_2_COL_GENE_NETWORK)
     def run_with(self, input_files, output_dir):
         print "Running",self.__class__.__name__, "writing to", output_dir
-        # TODO finish implementing
+        gene_list = path_for_format(input_files, FMT_GENE_LIST)
+        gene_net_2_col = path_for_format(input_files, FMT_2_COL_GENE_NETWORK)
+        subprocess.call("python","scripts/network_snps.py","--input",gene_list,
+                        "--network",gene_net_2_col, "--out", output_dir)
 
 
 class Funseq2(Analyzer):
