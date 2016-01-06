@@ -201,14 +201,25 @@ class Analyzer(object):
 class Hotnet2(Analyzer):
     def requires(self):
         return (FMT_HOTNET2_EDGE,FMT_HOTNET2_GENE_INDEX, FMT_GENE_LIST) #TODO dummy list
+    def run_with(self, input_files, output_dir):
+        print "Running",self.__class__.__name__, "writing to", output_dir
+        # TODO finish implementing
 
 class Networkx(Analyzer):
     def requires(self):
         return (FMT_GENE_LIST, FMT_2_COL_GENE_NETWORK, FMT_LOCATION_2_GENE_NAME)
+    def run_with(self, input_files, output_dir):
+        print "Running",self.__class__.__name__, "writing to", output_dir
+        # TODO finish implementing
+
 
 class Funseq2(Analyzer):
     def requires(self):
         return (FMT_PLINK_4_FUNSEQ,)
+    def run_with(self, input_files, output_dir):
+        print "Running",self.__class__.__name__, "writing to", output_dir
+        # TODO finish implementing
+
 
 
 analyzers = {
