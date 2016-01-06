@@ -137,7 +137,7 @@ def plink_assoc_to_gene_list(input_files, output_path):
 def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
     """Create a new heat_score_json formatted file at output_path"""
     input_path = input_file_in_tuple[0].path
-    print "Converting "+input_path+" to "+FMT_GENE_PVALUE
+    print "Converting "+input_path+" to "+FMT_HEAT_SCORE_JSON
     command_list=['python', '/home/ubuntu/ffrancis/hotnet2/hotnet2/generateHeat.py',
                     'mutation', '--snv_file', input_path, '--output_file',
                      output_path]
