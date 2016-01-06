@@ -262,8 +262,8 @@ class Funseq2(Analyzer):
 
 analyzers = {
     Hotnet2(),
-    Networkx(),
-    Funseq2()
+#    Networkx(),
+#    Funseq2()
 }
 
 parsed = parsed_command_line()
