@@ -3,6 +3,7 @@
 import argparse
 import os
 import tempfile
+import shutil
 
 # Constants giving names of file formats
 FMT_PLINK_ASSOC = 'plink_assoc' # Treated as a list of locations to use
@@ -210,9 +211,11 @@ parsed = parsed_command_line()
 print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
 possible = possible_inputs([a.file_format for a in avail], converters)
-temp_path = tempfile.mkdtemp()
+temp_dir_path = tempfile.mkdtemp()
 print "Possible: "+",".join(sorted(list(possible)));
 print "Could not run:" + ",".join(a.__class__.__name__+" is missing:"+",".join(a.missing(possible)) for a in analyzers if not a.can_run_with(possible))
 print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
 print "Converting inputs"
-inputs = all_inputs(avail, converters, temp_path)
+inputs = all_inputs(avail, converters, temp_dir_path)
+print "Files after conversions:",",".join(f.path for f in inputs)
+shutil.rmtree(temp_dir_path)
