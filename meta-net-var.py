@@ -106,12 +106,6 @@ def path_for_format(input_files, file_format):
     else:
         return f[0].path
 
-def plink_assoc_to_2_col_gene_network(input_file_in_tuple, output_path):
-    """Create a new networkx formatted interaction file at output_path"""
-    input_path = input_file_in_tuple[0].path
-    print "Converting "+input_path+" to "+FMT_2_COL_GENE_NETWORK
-    pass
-
 def genemania_inter_to_hotnet2_edge(input_file_in_tuple, output_path):
     """Create a new hotnet2_edge formatted file at output_path
 
@@ -158,9 +152,6 @@ class Conversion(object):
 
 
 converters = (
-#    Conversion((FMT_PLINK_ASSOC,),
-#               FMT_2_COL_GENE_NETWORK,
-#               plink_assoc_to_2_col_gene_network),
     Conversion((FMT_PLINK_4_FUNSEQ, FMT_LOCATION_2_GENE_NAME),
                FMT_GENE_LIST,
                plink_4_funseq_and_location_2_gene_name_to_gene_list),
@@ -255,8 +246,6 @@ class Networkx(Analyzer):
         gene_net_2_col = path_for_format(input_files, FMT_2_COL_GENE_NETWORK)
         command_list = ["python","scripts/network_snps.py","--input",gene_list,
                          "--network",gene_net_2_col, "--out", output_dir]
-        print "Command:"," ".join(command_list)
-        subprocess.call(command_list)
 
 
 class Funseq2(Analyzer):
@@ -264,7 +253,12 @@ class Funseq2(Analyzer):
         return (FMT_PLINK_4_FUNSEQ,)
     def run_with(self, input_files, output_dir):
         print "Running",self.__class__.__name__, "writing to", output_dir
-        # TODO finish implementing
+        input_file = path_for_format(input_files, FMT_PLINK_4_FUNSEQ)
+        command_list=['/home/ubuntu/graphanalytics/funseq2/funseq2-1.2/funseq2',
+                      '-f',os.path.abspath(input_file),
+                      '-inf','bed','-o',os.path.abspath(output_dir)]
+        print "Command:"," ".join(command_list)
+        subprocess.call(command_list)
 
 
 
@@ -280,6 +274,7 @@ avail = input_files(parsed)
 # Hard-coded paths
 avail.append(InputFile(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat'))
 avail.append(InputFile(FMT_HOTNET2_GENE_INDEX,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_index_file.txt'))
+avail.append(InputFile(FMT_2_COL_GENE_NETWORK,'/home/ubuntu/Data/geneMania.network')
 possible = possible_inputs([a.file_format for a in avail], converters)
 temp_dir_path = tempfile.mkdtemp(prefix='meta-net-var')
 print "Possible: "+",".join(sorted(list(possible)));
