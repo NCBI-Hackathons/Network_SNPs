@@ -161,7 +161,7 @@ converters = (
 #    Conversion((FMT_PLINK_ASSOC,),
 #               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
     Conversion((FMT_GENE_PVALUE,),
-               FMT_HEAT_SCORE_JSON, gene_pvalue_to_heat_score_json)
+               FMT_HEAT_SCORE_JSON, gene_pvalue_to_heat_score_json),
 )
 
 def possible_inputs(starting_input_formats, converters):
