@@ -3,7 +3,7 @@
 import argparse
 
 # Constants giving names of file formats
-FMT_PLINK_ASSOC = 'plink_assoc'
+FMT_PLINK_ASSOC = 'plink_assoc' # Treated as a list of locations to use
 FMT_GENEMANIA_INTER ='genemania_interaction'
    # 3 columns tab-separated no header:
    #
