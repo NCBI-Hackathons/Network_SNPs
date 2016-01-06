@@ -127,7 +127,9 @@ def plink_assoc_to_plink_4_funseq(input_file_in_tuple, output_path):
     """Create a new plink_4_funseq formatted file at output_path"""
     input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_PLINK_4_FUNSEQ
-    pass
+    command_list=['php', 'dbvartofunseq.php', input_path, output_path]
+    print "Command: "," ".join(command_list)
+    subprocess.call(command_list)
 
 def plink_assoc_to_gene_list(input_files, output_path):
     """Create a new gene_list formatted file at output_path"""
