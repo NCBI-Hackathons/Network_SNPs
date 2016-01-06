@@ -1,0 +1,77 @@
+diff -r dmGWAS-fixed/R/dms_2.4.R dmGWAS/R/dms_2.4.R
+367,380c367
+<       library(BiocParallel)
+<       register(MulticoreParam())
+<       cat("hello from my code\n")
+<       library(doMC, quiet=TRUE)
+<       library(foreach, quiet=TRUE)
+<       library(iterators, quiet=TRUE)
+<       registerDoMC()
+<
+< #     foreach(node= iter( V(G)$name ), verbose=TRUE ) %dopar% {
+< #             ng <- seedQueryJ_2.4(G, node, search_r, r)
+< #             if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+< #     }
+<
+<       sublist = bplapply(names(V(G)), function(node) {
+---
+>       for (node in V(G)$name) {
+382,394c369,370
+<               if (vcount(ng) < min.size) return (NA)
+<               return(ng)
+<       })
+<       names(sublist) <- names(V(G))
+<
+< #
+< #     for (node in V(G)$name) {
+< #             ng <- seedQueryJ_2.4(G, node, search_r, r)
+< #             if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+< #     }
+<
+<       na.omit.list <- function(y) { return(y[!sapply(y, function(x) all(is.na(x)))]) }
+<       sublist <- na.omit(sublist)
+---
+>               if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+>       }
+396d371
+<
+428d402
+<       #browser()
+487d460
+<
+diff -r dmGWAS-fixed/R/dms.R dmGWAS/R/dms.R
+33d32
+< cat("before global")
+35d33
+< cat("after global")
+diff -r dmGWAS-fixed/R/globalQueryJ.R dmGWAS/R/globalQueryJ.R
+9,20c9
+< #     library(doMC, quiet=TRUE)
+< #     library(foreach, quiet=TRUE)
+< #     library(iterators, quiet=TRUE)
+<       library(BiocParallel)
+<       register(MulticoreParam())
+< #     foreach(node= iter( V(G)$name ) ) %do% {
+< #             ng <- seedQueryJ(G, node, search_r, r, lambda)
+< #             if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+< #     }
+<
+<       cat("hello from my code\n")
+<       sublist = bplapply(names(V(G)), function(node) {
+---
+>       for (node in V(G)$name) {
+22,31c11,13
+<               if (vcount(ng) < min.size) return (NA)
+<               return(ng)
+<       })
+<
+<
+< #     for (node in V(G)$name) {
+< #             ng <- seedQueryJ(G, node, search_r, r, lambda)
+< #            #ng <- seedQueryJ(G, node, search_r, r, lambda=0)
+< #             if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+< #     }
+---
+>             #ng <- seedQueryJ(G, node, search_r, r, lambda=0)
+>               if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+>       }
