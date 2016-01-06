@@ -1,9 +1,8 @@
 # Network_SNPs
 A framework for network analysis and display of SNPs
 
-The group consisted of 6 members.
+The group consisted of 6 members. see Abstract for the list.
 
-Presentation of the work is available here: https://docs.google.com/presentation/d/1PzQrERWxcQQvih6TLuF4IBvmNCFe7D253Qm5UWPAWfA/edit?usp=sharing
 
 #Introduction
 Our work focuses on using network analysis methods to aid analysis of variant calls. Centrality measure is used as.
@@ -46,4 +45,11 @@ Our work focuses on using network analysis methods to aid analysis of variant ca
 <code>
 testing
 </code>
+
+
+#Appendices
+
+##presentation made on day 2 of hackathon
+(with additional changes on day 3)
+ https://docs.google.com/presentation/d/1PzQrERWxcQQvih6TLuF4IBvmNCFe7D253Qm5UWPAWfA/edit?usp=sharing
 
