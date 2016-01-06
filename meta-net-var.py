@@ -150,16 +150,16 @@ class Conversion(object):
 
 
 converters = (
-    Conversion((FMT_PLINK_ASSOC,),
-               FMT_2_COL_GENE_NETWORK,
-               plink_assoc_to_2_col_gene_network),
-    Conversion((FMT_PLINK_4_FUNSEQ, FMT_LOCATION_2_GENE_NAME),
-               FMT_GENE_LIST,
-               plink_assoc_to_gene_list),
-    Conversion((FMT_GENEMANIA_INTER,),
-               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
-    Conversion((FMT_PLINK_ASSOC,),
-               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
+#    Conversion((FMT_PLINK_ASSOC,),
+#               FMT_2_COL_GENE_NETWORK,
+#               plink_assoc_to_2_col_gene_network),
+#    Conversion((FMT_PLINK_4_FUNSEQ, FMT_LOCATION_2_GENE_NAME),
+#               FMT_GENE_LIST,
+#               plink_assoc_to_gene_list),
+#    Conversion((FMT_GENEMANIA_INTER,),
+#               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
+#    Conversion((FMT_PLINK_ASSOC,),
+#               FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
     Conversion((FMT_GENE_PVALUE,),
                FMT_HEAT_SCORE_JSON, gene_pvalue_to_heat_score_json)
 )
