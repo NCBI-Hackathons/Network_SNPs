@@ -230,10 +230,13 @@ class Hotnet2(Analyzer):
         heat_score=path_for_format(input_files,FMT_HEAT_SCORE_JSON)
         influence=path_for_format(input_files,FMT_HOTNET2_INFLUENCE_MAT)
         g_index=path_for_format(input_files,FMT_HOTNET2_GENE_INDEX)
-        subprocess.call(['python','/home/ubuntu/ffrancis/hotnet2/hotnet2/bin/findComponents.py',
+        command_list = ['python','/home/ubuntu/ffrancis/hotnet2/hotnet2/bin/findComponents.py',
                         '--infmat_file',influence,'--infmat_index_file',g_index,
                         '--heat_file',heat_score,'--deltas','0.1',
-                         '--min_cc_size','1','--output_directory',output_dir, 'none'])
+                         '--min_cc_size','1','--output_directory',output_dir, 'none']
+        print "Command:"," ".join(command_list)
+        subprocess.call(command_list)
+        
 
 class Networkx(Analyzer):
     def requires(self):
@@ -285,4 +288,7 @@ for analyzer in analyzers:
     except OSError:
         print "Could not run", a_name, "because", a_path, " was already in existence"
 
-shutil.rmtree(temp_dir_path)
+print 'Not removing temp directory for debugging:'
+print 'Tempdir is:'
+print temp_dir_path
+#shutil.rmtree(temp_dir_path)
