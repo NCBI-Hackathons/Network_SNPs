@@ -131,7 +131,7 @@ def plink_assoc_to_plink_4_funseq(input_file_in_tuple, output_path):
 
 def plink_assoc_to_gene_list(input_files, output_path):
     """Create a new gene_list formatted file at output_path"""
-    print "Converting "+",".join(input_files)+" to "+FMT_GENE_LIST
+    print "Converting "+",".join(str(f) for f in input_files)+" to "+FMT_GENE_LIST
     pass
 
 def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
