@@ -9,7 +9,7 @@ Our work focuses on using network analysis methods to aid analysis of variant ca
 
 # Example
 
-An example invocation of the meta-analysis package can be found in the <pre>sample_run.sh<pre> file
+An example invocation of the meta-analysis package can be found in the <pre>sample_run.sh</pre> file
 
 # Input
 
