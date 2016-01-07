@@ -34,7 +34,7 @@ _output:_  3-column file with gene names, degrees and betweenness of genes.
                 HHIPL2	41	0.000495219919278
                 CYP2B6	41	0.000465664109724
                 CLDN20	17	5.61032381821e-05
-**_pngs/**: This folder has a figure for each input gene and its neighbor genes.
+**pngs/**: This folder has a figure for each input gene and its neighbor genes.
 
 **xml_format**: This folder has the xml format of the subnetworks in the pngs folder.
 #Running the pipeline
