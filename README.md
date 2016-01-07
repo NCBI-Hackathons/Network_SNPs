@@ -8,16 +8,13 @@ The group consisted of 6 members. see Abstract for the list.
 Our work focuses on using network analysis methods to aid analysis of variant calls. Centrality measure is used as.
 
 # Input
-<p><strong>1</strong>
-</p>
-<p><strong>2</strong>
-</p>
+
+_todo_
+
 # Output
-<strong>Filenames:</strong>
-<p><i>output:</i>  3-column file with gene names, degrees and betweenness of genes.
-   <p>
-        <pre>
-                <code>
+*Filenames:*
+_output:_  3-column file with gene names, degrees and betweenness of genes.
+
                 # From this output, it would be smart to focus on CD3EAP since it
                 # has the highest centrality and degree measurement
                 # Example:
@@ -31,20 +28,12 @@ Our work focuses on using network analysis methods to aid analysis of variant ca
                 HHIPL2	41	0.000495219919278
                 CYP2B6	41	0.000465664109724
                 CLDN20	17	5.61032381821e-05
-                </code>
-        </pre>
-   </p>
+_pngs/_: This folder has a figure for each input gene and its neighbor genes.
 </p>
-<p><i>pngs/</i>: This folder has a figure for each input gene and its neighbor genes.
-</p>
-<p><i>xml_format/</i>: This folder has the xml format of the subnetworks in the pngs folder.
-</p>
-<p><i>xml_format</i>: This folder has the xml format of the subnetworks in the pngs folder.
-</p>
+_xml_format_: This folder has the xml format of the subnetworks in the pngs folder.
+_xml_format_: This folder has the xml format of the subnetworks in the pngs folder.
 #Running the pipeline
-<code>
-testing
-</code>
+    testing
 
 
 #Appendices
