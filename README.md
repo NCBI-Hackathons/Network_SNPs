@@ -7,12 +7,16 @@ The group consisted of 6 members. see Abstract for the list.
 #Introduction
 Our work focuses on using network analysis methods to aid analysis of variant calls. Centrality measure is used as.
 
+# Example
+
+An example invocation of the meta-analysis package can be found in the **sample_run.sh** file
+
 # Input
 
 _todo_
 
 # Output
-*Filenames:*
+**Filenames:**
 _output:_  3-column file with gene names, degrees and betweenness of genes.
 
                 # From this output, it would be smart to focus on CD3EAP since it
