@@ -18,8 +18,26 @@ An example invocation of the meta-analysis package can be found in
 _todo_
 
 # Output
-**Filenames:**
-_output:_  3-column file with gene names, degrees and betweenness of genes.
+##Funseq2
+###Candidates.Summary
+Needs description
+###Error.log
+Needs description
+###Output.vcf
+Needs description
+###Recur.Summary
+Needs description
+##Hotnet2
+###Delta_0.1
+There will be one subdirectory for each delta used. At the moment delta=0.1 is hard-coded in the meta-script calling Hotnet2.
+####components.txt
+Needs description
+####results.json
+Needs description
+##NetworkX
+Output of our home-grown package that needs a better name
+###output
+3-column file with gene names, degrees and betweenness of genes.
 
                 # From this output, it would be smart to focus on CD3EAP since it
                 # has the highest centrality and degree measurement
@@ -34,12 +52,20 @@ _output:_  3-column file with gene names, degrees and betweenness of genes.
                 HHIPL2	41	0.000495219919278
                 CYP2B6	41	0.000465664109724
                 CLDN20	17	5.61032381821e-05
-**_pngs/**: This folder has a figure for each input gene and its neighbor genes.
+###pngs/
 
-**xml_format**: This folder has the xml format of the subnetworks in the pngs folder.
+This folder has a figure for each input gene and its neighbor genes.
+
+###xml_format/ 
+
+This folder has the xml format of the subnetworks in the pngs folder.
+
 #Running the pipeline
-    testing
 
+See the file:
+```
+sample_run.sh
+```
 
 #Appendices
 
