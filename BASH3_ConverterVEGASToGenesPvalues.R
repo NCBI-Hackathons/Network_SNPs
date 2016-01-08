@@ -1,4 +1,4 @@
-#!/usr/bin/env R_LIBS=$HOME/RLIB R
+#!/usr/bin/env R_LIBS=$HOME/RLIB Rscript
 
 #Converting VEGAS output into a simple matrix with 2 columns (Gene Symbol, Summary p-values):
 
