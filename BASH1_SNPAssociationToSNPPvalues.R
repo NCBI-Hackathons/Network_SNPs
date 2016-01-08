@@ -26,9 +26,9 @@ print("This is the format of your SNP Association File")
 head(SNPAssociationFile)
 
 print("These are the columns that you have indicated include the SNP names and pvalues")
-head(SNPAssociationFile[,c(1,2)])
+head(SNPAssociationFile[,c(ColumnNumberSNPNames,ColumnNumberSNPpvalues)])
 
 #Note: We need to extract out only the columns of data including the SNP names and p-values, no header:
-write.table(SNPAssociationFile[,c(1,2)], paste(OutputPath, "TestData_OnlySNPs_pvalues.txt", sep=""), quote=F, sep="\t",  col.names=F, row.names=F)
+write.table(SNPAssociationFile[,c(ColumnNumberSNPNames,ColumnNumberSNPpvalues)], paste(OutputPath, "TestData_OnlySNPs_pvalues.txt", sep=""), quote=F, sep="\t",  col.names=F, row.names=F)
 
 q()
