@@ -1,4 +1,4 @@
-#!/usr/bin/env R
+#!/usr/bin/env Rscript
 
 #Converting SNP Association data into the right format for VEGAS.
 
