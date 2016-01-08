@@ -1,4 +1,4 @@
-#!/usr/bin/env R_LIBS=$HOME/RLIB R
+#!/usr/bin/env R_LIBS=$HOME/RLIB Rscript
 
 #Overlaying our Gene-level summary p-values onto a pre-created PPI network:
 
