@@ -1,28 +1,28 @@
-#!/usr/bin/env R_LIBS=$HOME/RLIB Rscript
+#!/usr/bin/env Rscript
+
 
 #Overlaying our Gene-level summary p-values onto a pre-created PPI network:
 
 args<-commandArgs(trailingOnly=TRUE)
 
-if(args[1]=="-h"){
-print("This script overlays gene-level summary p-values onto a pre-created PPI network.
-The arguments you need are: 
-1. A tab-delimited text file containing a simple matrix with 2 columns (Gene Symbol, Summary p-values) containing the gene-level summary data for an entire GWAS study (in this case, the file TestData_OnlyGeneNames_pvalues.txt created by VEGAS and then converted to the appropriate format by the script ConverterVegasToGenesPvalues). 
-2. The name of a file containing the network of interest. Our default is the network produced by GeneMania (File: COMBINED.DEFAULT_NETWORKS.BP_COMBINING_MAPPED.txt) 
-3. An output file directory")
+if(as.character(args[1])=="-h"){
+print("This script overlays gene-level summary p-values onto a pre-created PPI network. The arguments you need are: 1. A tab-delimited text file containing a simple matrix with 2 columns (Gene Symbol, Summary p-values) containing the gene-level summary data for an entire GWAS study (in this case, the file TestData_OnlyGeneNames_pvalues.txt created by VEGAS and then converted to the appropriate format by the script ConverterVegasToGenesPvalues). (e.g., ./Output/TestData_OnlyGeneNames_pvalues.txt), 2. The name of a file containing the network of interest. Our default is the network produced by GeneMania (File: COMBINED.DEFAULT_NETWORKS.BP_COMBINING_MAPPED.txt) (e.g., ./COMBINED.DEFAULT_NETWORKS.BP_COMBINING_MAPPED.txt), 3. An output file directory (e.g., ./Output/), Example syntax: ./BASH4_dmGWAS.R ./Output/TestData_OnlyGeneNames_pvalues.txt ./COMBINED.DEFAULT_NETWORKS.BP_COMBINING_MAPPED.txt ./Output/ ")
+quit()
 }else{}
 
-GenePvalueFileName<-args[1]
-NetworkFileName<-args[2]
-OutputPath<-args[3]
+
+GenePvalueFileName<-as.character(args[1])
+NetworkFileName<-as.character(args[2])
+OutputPath<-as.character(args[3])
 
 ###########################
+
 
 #Reading in Genes and Associated p-values:
 
 print("Reading in genes and associated p-values...")
 
-geneweight<-read.table(GenePvalueFileName, sep="\t", col.names=TRUE)
+geneweight<-read.table(GenePvalueFileName, sep="\t", header=TRUE)
 
 #dmGWAS chokes with p==0 and p==1), so we have to replace them
 geneweight[geneweight[,2]==1,2]<-0.999
@@ -41,9 +41,13 @@ head(network)
 network<-network[,c(1,2)]
 colnames(network)<-c("interactorA", "interactorB")
 
+library(plyr)
+
 print("Initiating parallel computing for network analysis: Depending on computing power, this may take hours or days.")
 
-library(BocParallel)
+#Indicate to R that it should search for the fixed version of dmGWAS in a different folder: This code is the same thing as running in BASH: env R_LIBS=$HOME/RLIB R
+.libPaths("/home/ubuntu/RLIB") 
+library(BiocParallel)
 library(dmGWAS)
 
 #Note: this is just using the recommended settings. Tweaking r can change the strictness of the p-values for what is included in the network formation. Making R larger can reduce network size and computing time:
@@ -58,8 +62,6 @@ print("Initial network construction complete: Full network and related output sa
 
 print("Pulling out subnetwork information for each top gene and creating navigable output...")
 
-library(plyr)
-
 #Calculating percentage rank:
 
 #The output that is overviewed in the dmGWAS manual is not what we see!
@@ -67,9 +69,9 @@ library(plyr)
 SeedGeneModuleScorePercentileRank<-(length(res.list$zi.ordered[,3])-rank(res.list$zi.ordered[,3])+1)/length(res.list$zi.ordered[,3])
 
 temp<-data.frame(res.list$zi.ordered[,c(1,3)], SeedGeneModuleScorePercentileRank)
-colnames(temp)<-c("Gene", "Zn_NormalizedModuleScore", "Percentile Rank")
+colnames(temp)<-c("gene", "Zn_NormalizedModuleScore", "Percentile Rank")
 
-SummaryByGene<-join(temp, geneweight, by="Gene")
+SummaryByGene<-join(temp, geneweight, by="gene")
 colnames(SummaryByGene)[4]<-"OriginalAssociationPvalue"
 
 write.table(SummaryByGene, paste(OutputPath,"ModuleStrengthSummaryByGene.txt", sep=""), sep="\t")
@@ -84,13 +86,12 @@ print("Pulling out a list of subnetwork nodes for the genes with the most enrich
 Top1000ModuleScores<-SummaryByGene[c(1:1000),]
 
 head(Top1000ModuleScores)
-head(names(res.list$genesets.clear))
 
 SubgraphGeneSets<-vector("list", length=length(Top1000ModuleScores[,1]))
 
-for(i in 1:length(Top1000ModuleScores$Gene)){
+for(i in 1:length(Top1000ModuleScores$gene)){
 
-temp<-((names(res.list$genesets.clear)) %in% (as.character(Top1000ModuleScores$Gene[[i]])))
+temp<-((names(res.list$genesets.clear)) %in% (as.character(Top1000ModuleScores$gene[[i]])))
 
 SubgraphForGene<-res.list$genesets.clear[temp==T]
 
