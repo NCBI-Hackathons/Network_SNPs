@@ -1,20 +1,20 @@
-#!/usr/bin/env R_LIBS=$HOME/RLIB Rscript
+#!/usr/bin/env Rscript
+
 
 #Converting VEGAS output into a simple matrix with 2 columns (Gene Symbol, Summary p-values):
 
 args<-commandArgs(trailingOnly=TRUE)
 
-if(args[1]=="-h"){
-print("This script converts VEGAS output into a simple matrix with 2 columns (Gene Symbol, Summary p-values).
-The arguments you need are: 
-1. A VEGAS output file containing a summary of case-control association by gene. 
-2. An output file directory")
+if(as.character(args[1])=="-h"){
+print("This script converts VEGAS output into a simple matrix with 2 columns (Gene Symbol, Summary p-values). The arguments you need are: 1. A VEGAS output file containing a summary of case-control association by gene (e.g., ./VEGAS/TestData_Gene_pvalues.out) 2. An output file directory (e.g., ./Output/ ).  Example syntax: ./BASH3_ConverterVegasToGenesPvalues.R  ./VEGAS/TestData_Gene_pvalues.out  ./Output/  ")
+quit()
 }else{}
 
-GenePvalueFileName<-args[1]
-OutputPath<-args[3]
+GenePvalueFileName<-as.character(args[1])
+OutputPath<-as.character(args[2])
 
 ###########################
+
 
 #Reading in Genes and Associated p-values:
 
@@ -39,15 +39,16 @@ GenePvalues_textvector[c(GenePvalues_textvectorExtract)]
 #If so, skip to this:
 GenePvalues<-read.table(textConnection(GenePvalues_textvector), sep="", blank.lines.skip=T, header=T) 
 
+print("This is what the data originally looks like...")
 head(GenePvalues)
 
 geneweight<-GenePvalues[,c(2,8)]
 colnames(geneweight)<-c("gene", "weight")
 
-print("This is what your data looks like currently. It should contain only two columns now: Genes and Pvalues")
+print("This is what your data looks like after conversion. It should contain only two columns now: Genes and Pvalues")
 head(geneweight)
 
 #Check if this needs header=F and whether we need to trim down the matrix in order to feed it into dmGWAS or any other program:
-write.table(geneweight, paste(OutputPath, "TestData_OnlyGeneNames_pvalues.txt", sep=""), sep="\t", col.names=TRUE)
+write.table(geneweight, paste(OutputPath, "TestData_OnlyGeneNames_pvalues.txt", sep=""), sep="\t", row.names=FALSE, col.names=TRUE)
 
 
