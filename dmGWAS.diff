@@ -1,0 +1,82 @@
+diff -Naur dmGWAS/R/dms_2.4.R dmGWAS-fixed/R/dms_2.4.R
+--- dmGWAS/R/dms_2.4.R  2015-02-19 17:03:18.000000000 +0000
++++ dmGWAS-fixed/R/dms_2.4.R    2016-01-06 21:42:32.556994628 +0000
+@@ -364,11 +364,27 @@
+                stop('igraph must be pre-installed!\n')
+        }
+        sublist = list()
+-       for (node in V(G)$name) {
++
++# TODO: move this into the manifest!
++# Must be installed by
++# source("https://bioconductor.org/biocLite.R")
++# biocLite("BiocParallel")
++       library(BiocParallel)
++       register(MulticoreParam())
++
++       sublist = bplapply(names(V(G)), function(node) {
+                ng <- seedQueryJ_2.4(G, node, search_r, r)
+-               if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+-       }
++               if (vcount(ng) < min.size) return (NA)
++               return(ng)
++       })
++# Ensure name attribute is preserved
++       names(sublist) <- names(V(G))
++
++# Clean the list of NA entries
++       na.omit.list <- function(y) { return(y[!sapply(y, function(x) all(is.na(x)))]) }
++       sublist <- na.omit(sublist)
+        return(sublist)
++
+ }
+ #==================================================================================================================#
+
+@@ -458,6 +474,7 @@
+ for(k in 5:length.max)
+ {
+        l.zperm <- c()
++
+        for(j in 1:100000)
+        {
+                idx.pseudo=sample(genes.idx, size=k)
+diff -Naur dmGWAS/R/globalQueryJ.R dmGWAS-fixed/R/globalQueryJ.R
+--- dmGWAS/R/globalQueryJ.R     2015-02-19 17:03:18.000000000 +0000
++++ dmGWAS-fixed/R/globalQueryJ.R       2016-01-06 21:41:38.316994628 +0000
+@@ -3,15 +3,30 @@
+        if (!require(igraph)) {
+                stop('igraph must be pre-installed!\n')
+        }
++
++# TODO: move this into the manifest!
++# Must be installed by
++# source("https://bioconductor.org/biocLite.R")
++# biocLite("BiocParallel")
++       library(BiocParallel)
++       register(MulticoreParam())
+
+       #system.time({
+        sublist = list()
+-       for (node in V(G)$name) {
++
++       sublist = bplapply(names(V(G)), function(node) {
+                ng <- seedQueryJ(G, node, search_r, r, lambda)
+-            #ng <- seedQueryJ(G, node, search_r, r, lambda=0)
+-               if (vcount(ng) >= min.size) sublist[[node]] <- ng       #minimum size filtering
+-       }
+-      #})
++               if (vcount(ng) < min.size) return (NA)
++               return(ng)
++       })
++
++# Ensure name attribute is preserved
++       names(sublist) <- names(V(G))
++
++# Clean the list of NA entries
++       na.omit.list <- function(y) { return(y[!sapply(y, function(x) all(is.na(x)))]) }
++       sublist <- na.omit(sublist)
++
++      #}) # time function
+        return(sublist)
+ }
+-
