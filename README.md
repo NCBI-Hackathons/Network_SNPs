@@ -6,6 +6,9 @@ This program was constructed by: Vijayaraj Nagarajan PhD, Vojtech Huser MD PhD, 
 #Introduction
 This pipeline allows users to access multiple tools for applying network analysis to human genomic datasets using one simple command-line based program. The user inputs a list of genes, single-nucleutide polymorphisms, or variant loci, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. These nodes are then connected by referencing databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.). 
 
+#Dependencies
+This program depends on a large number of pre-existings software packages. Therefore, to simplify matters, we offer the snapshot of our working instance as an Amazon Machine Image. The collection of tools and the pipeline script can be executed by executing stored amazon instance AMI # XXX-XXX-XXX. (VRTODO)
+
 # Example
 
 An example invocation of the meta-analysis package can be found in
@@ -129,10 +132,16 @@ Citation for HotNet2: [PMID: 21385051, http://compbio.cs.brown.edu/projects/hotn
 
 ###Delta_0.1
 There will be one subdirectory for each delta used. At the moment delta=0.1 is hard-coded in the meta-script calling Hotnet2.
+
 ####components.txt
-Needs description
+As described by HotNet2: Components.txt "lists subnetworks identified as significantly altered, one per line. Genes within each subnetwork are separated by tabs."
+
+####significance.txt
+As described by HotNet2: "For k from 2 - 10," significance.txt "lists the number of subnetworks of size >= k found in the real data, the expected number of subnetworks of size >= k based on permuted data, and the p-value for the observed number of subnetworks."
+
 ####results.json
-Needs description
+ As described by HotNet2: "Contains all of the above information plus the parameters used for the run in JSON format to faciliate further automated processing"
+
 
 ##NetworkX
 Citation for NetworkX: [https://networkx.github.io/] 
