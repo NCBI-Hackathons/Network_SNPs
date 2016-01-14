@@ -1,5 +1,5 @@
-# Network_SNPs: "MetaNetVars"
-MetaNetVars is a pipeline for applying network analysis tools for genomic variants analysis
+# Network_SNPs: "MetaNetVar"
+MetaNetVar is a pipeline for applying network analysis tools for genomic variants analysis
 
 This program was constructed by: Vijayaraj Nagarajan PhD, Vojtech Huser MD PhD, Eric Moyer MS, Felix Francis MS, Oscar Rodriguez, Matthew Lesko, Megan Hagenauer PhD, Ben Busby PhD.
 
