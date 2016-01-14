@@ -110,13 +110,19 @@ For example, the first 100 bases of a chromosome are defined as chromStart=0, ch
 Citation for FunSeq2: [PMID: 24092746, http://funseq2.gersteinlab.org/] 
 
 ###Candidates.Summary
-Needs description
+As described by Funseq2: "A candidate variants file, including coding (nonsynonymous and premature stop) variants, noncoding variants (score >=1.5), and variants associated with cancer genes"
+Example:
+Network_SNPs/test/sample_output/funseq2/cardiomyopathyfunseqoutput/Candidates.Summary
+
 ###Error.log
-Needs description
+A description of any errors that may have occurred while running Funseq2.
+
 ###Output.vcf
-Needs description
+A detailed output file. Example: 
+Network_SNPs/test/sample_output/funseq2/cardiomyopathyfunseqoutput/Output.vcf
+
 ###Recur.Summary
-Needs description
+As described by Funseq2: "A summary file for recurrent analysis if multiple-sample data are uploaded" 
 
 ##Hotnet2
 Citation for HotNet2: [PMID: 21385051, http://compbio.cs.brown.edu/projects/hotnet/] 
