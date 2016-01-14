@@ -16,7 +16,7 @@ An example invocation of the meta-analysis package can be found in
 
 MetaNetVars can accept multiple forms of input.
 
-## PLINK-formatted association files:  (http://pngu.mgh.harvard.edu/~purcell/plink/)
+## PLINK-formatted association file:  (http://pngu.mgh.harvard.edu/~purcell/plink/)
             # NCBI dbGaP analysis accession:	pha002890
             # Name:	 Genome Wide Association Study in Age-related Macular Degeneration (AMD)
             # Description:	 Genome-wide genotyping data were produced using the Illumina HumanCNV370v1_C array platform and filtered             using the following criteria: 1) per sample call rate &#8805; 99%, 2) SNP minor allele frequency &#8805; 1%, 3) SNP call              rate &#8805; 95%, 4) SNP HWE p-value &#8805; 1x10 -6 , 5) removing unexpected relatives, resulting in a set of 324067                 autosomal SNPs across 3307 unrelated samples (2157 cases and 1150 controls).  
@@ -65,7 +65,7 @@ For example, the first 100 bases of a chromosome are defined as chromStart=0, ch
             chr1  213942363  213942364	A	C	PR2832
             chr1  213943530  213943531	T	A	PR1783
 
-##Tab-delimited SNP association p-value .txt files:
+##Tab-delimited SNP association p-value .txt file:
             SNP ID	P-value
             rs6753288	0.8531
             rs2069916	0.3409
@@ -79,7 +79,7 @@ For example, the first 100 bases of a chromosome are defined as chromStart=0, ch
 ## VEGAS output providing aggregate association p-values for each gene: (http://gump.qimr.edu.au/VEGAS/)
         This is a plain-text file with the columns: Chromosome, Gene, Number of SNPs, Number of simulations, Start position, Stop             position, Gene-based test statistic, P-value.
 
-##Tab-delimited gene & aggregate association p-value .txt files: 
+##Tab-delimited gene & aggregate association p-value .txt file: 
             Gene	Pvalue
             GPR1	0.09762
             CD3EAP	0.148
@@ -159,6 +159,25 @@ This folder has the xml format of the subnetworks in the pngs folder.
 ##dmGWAS:
 Citation for dmGWAS_3.0: [PMID: 21045073, http://bioinfo.mc.vanderbilt.edu/dmGWAS/]
 
+### ModuleStrengthSummaryByGene.txt:
+This tab-delimited file provides the Normalized Module Score for each gene included in the network (Zn, larger = more enriched for significant case-control associations), and the original gene-level summary case-control association p-value. It is ordered by percentile rank.
+
+            	Gene	Zn_NormalizedModuleScore	Percentile Rank	OriginalAssociationPvalue
+            1	GPR1	18.90248159	6.46E-05	0.09762
+            2	TNFRSF1A	18.84423858	0.000161614	0.148
+            3	CD3EAP	18.84423858	0.000161614	0.148
+            4	DNASE1	18.81404777	0.000258582	0.18
+            5	COL18A1	18.7791487	0.000323227	0.222
+
+### Top1000ModuleScores.txt:
+This tab-delimited file provides similar information as ModuleStrengthSummaryByGene.txt, but expands the output to include the list of genes (nodes) present in each gene's subnetwork.  Only output for the top 1000 genes is provided (as determined by percentile rank).
+
+            "Gene"	"Zn_NormalizedModuleScore"	"Percentile Rank"	"OriginalAssociationPvalue"	"SubgraphGeneSets"
+            "GPR1"	18.9024815902315	6.46454198720021e-05	0.09762	"CFH, CFHR2, PLEKHA1, CFHR3, CFHR4, CFHR5, CRB1, BTBD16, F13B, KCNT2, HTRA1, C2, GPR1, SKIV2L, EHMT2, CFB, PRRT1, CFHR1"
+            "TNFRSF1A"	18.8442385760159	0.000161613549680005	0.148	"CFH, TNFRSF1A, CFHR2, PLEKHA1, CFHR3, CFHR4, CFHR5, CASP6, F13B, KCNT2, HTRA1, C2, FKBPL, SKIV2L, EHMT2, CFB, PRRT1, CFHR1"
+            "CD3EAP"	18.8442385760159	0.000161613549680005	0.148	"CFH, ASPM, CFHR2, CFHR3, CD3EAP, CFHR4, CFHR5, CRB1, BTBD16, F13B, KCNT2, HTRA1, C2, TNXB, ZBTB41, CFB, ZBTB12, CFHR1"
+            "DNASE1"	18.8140477736006	0.000258581679488008	0.18	"CFH, CFHR2, CFHR3, CFHR4, CFHR5, CRB1, BTBD16, F13B, KCNT2, HTRA1, C2, TNXB, FKBPL, SKIV2L, EHMT2, CFB, DNASE1, CFHR1"
+            "COL18A1"	18.7791487006205	0.00032322709936001	0.222	"CFH, CFHR2, PLEKHA1, CFHR3, CFHR4, CFHR5, CRB1, F13B, KCNT2, HTRA1, C2, TNXB, COL18A1, SKIV2L, EHMT2, CFB, PRRT1, CFHR1"
 
 #Running the pipeline
 
