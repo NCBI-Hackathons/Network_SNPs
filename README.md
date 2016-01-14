@@ -17,7 +17,7 @@ An example invocation of the meta-analysis package can be found in
 
 # Input
 
-MetaNetVar can accept multiple forms of input.
+MetaNetVar can accept any of the following forms of input:
 
 ## PLINK-formatted association file:  (http://pngu.mgh.harvard.edu/~purcell/plink/)
             # NCBI dbGaP analysis accession:	pha002890
