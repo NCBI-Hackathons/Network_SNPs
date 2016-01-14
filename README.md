@@ -51,6 +51,20 @@ MetaNetVars can accept multiple forms of input.
             rs2288655	0.196	2	128246983	ss121987517	+	+	G	A	0.5284	0.02692	0.999536393138618	1	1.099	0.9525	1.268
 
 
+##Bed Formatted association file:
+A tab-delimited text file with 5 required fields:
+chrom	chromStart	chromEnd	Reference.allele	Alterative.allele	[optional]sample.name
+* chrom - The name of the chromosome (e.g. chr3, chrY). 
+* chromStart - The starting position of the feature in the chromosome. The first base in a chromosome is numbered 0.
+* chromEnd - The ending position of the feature in the chromosome. The chromEnd base is not included in the display of the feature. 
+For example, the first 100 bases of a chromosome are defined as chromStart=0, chromEnd=100, and span the bases numbered 0-99.
+* Reference.allele - The reference allele of SNVs
+* Alternative.allele - The alternative allele of SNVs.
+
+            chr1  213941196  213941197	G	T	PR2832
+            chr1  213942363  213942364	A	C	PR2832
+            chr1  213943530  213943531	T	A	PR1783
+
 ##Tab-delimited SNP association p-value .txt files:
             SNP ID	P-value
             rs6753288	0.8531
