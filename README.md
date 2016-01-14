@@ -1,10 +1,10 @@
-# Network_SNPs
-This pipeline allows users to access multiple tools for applying network analysis to genomic datasets using one simple command-line based program. The user inputs a list of genes or single-nucleutide polymorphisms, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. These nodes are then connected by referencing databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.).  
+# Network_SNPs: "MetaNetVars"
+MetaNetVars is a pipeline for applying network analysis tools for genomic variants analysis
 
 This program was constructed by a group consisting of 6 members (see Abstract for the list).
 
 #Introduction
-Our work focuses on using network analysis methods to aid analysis of variant calls. Centrality measure is used as.
+This pipeline allows users to access multiple tools for applying network analysis to genomic datasets using one simple command-line based program. The user inputs a list of genes, single-nucleutide polymorphisms, or variant loci, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. These nodes are then connected by referencing databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.).  
 
 # Example
 
