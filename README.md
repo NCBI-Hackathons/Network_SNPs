@@ -1,7 +1,7 @@
 # Network_SNPs: "MetaNetVars"
 MetaNetVars is a pipeline for applying network analysis tools for genomic variants analysis
 
-This program was constructed by a group consisting of 6 members (see Abstract for the list).
+This program was constructed by: Vijayaraj Nagarajan PhD, Vojtech Huser MD PhD, Eric Moyer MS, Felix Francis MS, Oscar Rodriguez, Matthew Lesko, Megan Hagenauer PhD, Ben Busby PhD.
 
 #Introduction
 This pipeline allows users to access multiple tools for applying network analysis to genomic datasets using one simple command-line based program. The user inputs a list of genes, single-nucleutide polymorphisms, or variant loci, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. These nodes are then connected by referencing databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.).  
@@ -18,6 +18,8 @@ _todo_
 
 # Output
 ##Funseq2
+Citation for FunSeq2: [PMID: 24092746, http://funseq2.gersteinlab.org/] 
+
 ###Candidates.Summary
 Needs description
 ###Error.log
@@ -26,15 +28,21 @@ Needs description
 Needs description
 ###Recur.Summary
 Needs description
+
 ##Hotnet2
+Citation for HotNet2: [PMID: 21385051, http://compbio.cs.brown.edu/projects/hotnet/] 
+
 ###Delta_0.1
 There will be one subdirectory for each delta used. At the moment delta=0.1 is hard-coded in the meta-script calling Hotnet2.
 ####components.txt
 Needs description
 ####results.json
 Needs description
+
 ##NetworkX
+Citation for NetworkX: [https://networkx.github.io/] 
 Output of our home-grown package that needs a better name
+
 ###output
 3-column file with gene names, degrees and betweenness of genes.
 
@@ -58,6 +66,10 @@ This folder has a figure for each input gene and its neighbor genes.
 ###xml_format/ 
 
 This folder has the xml format of the subnetworks in the pngs folder.
+
+#dmGWAS:
+Citation for dmGWAS_3.0: [PMID: 21045073, http://bioinfo.mc.vanderbilt.edu/dmGWAS/]
+
 
 #Running the pipeline
 
