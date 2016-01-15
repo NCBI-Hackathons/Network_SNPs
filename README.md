@@ -136,11 +136,16 @@ There will be one subdirectory for each delta used. At the moment delta=0.1 is h
 ####components.txt
 As described by HotNet2: Components.txt "lists subnetworks identified as significantly altered, one per line. Genes within each subnetwork are separated by tabs."
 
+components.txt (https://github.com/NCBI-Hackathons/Network_SNPs/blob/master/delta_0.1/components.txt)
+
+
 ####significance.txt
 As described by HotNet2: "For k from 2 - 10," significance.txt "lists the number of subnetworks of size >= k found in the real data, the expected number of subnetworks of size >= k based on permuted data, and the p-value for the observed number of subnetworks."
 
 ####results.json
- As described by HotNet2: "Contains all of the above information plus the parameters used for the run in JSON format to faciliate further automated processing"
+As described by HotNet2: "Contains all of the above information plus the parameters used for the run in JSON format to faciliate further automated processing"
+
+results.json (https://github.com/NCBI-Hackathons/Network_SNPs/blob/master/delta_0.1/results.json)
 
 
 ##NetworkX
