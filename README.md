@@ -4,10 +4,10 @@ MetaNetVar is a pipeline for applying network analysis tools for genomic variant
 This pipeline was developed by: Vijayaraj Nagarajan PhD, Vojtech Huser MD PhD, Eric Moyer MS, Felix Francis MS, Oscar Rodriguez, Matthew Lesko, Megan Hagenauer PhD, Ben Busby PhD.
 
 #Introduction
-This pipeline allows users to access multiple tools for applying network analysis to human genomic datasets using one simple command-line based program. The user inputs a list of genes, single-nucleutide polymorphisms, or variant loci, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. These nodes are then connected by referencing databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.). 
+This pipeline allows users to access multiple tools for applying network analysis to human genomic datasets using one simple command-line based program. The pipeline is designed to take different user input formats like a list of genes, single-nucleutide polymorphisms, or variant loci, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. This pilot version has been tested on case-control GWAS data obtained from NCBI's dbGaP. Potential associations among the variants (nodes) from the users input are derived by the included programs, using reference databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.). 
 
 #Dependencies
-This program depends on a large number of pre-existings software packages. Therefore, to simplify matters, we offer the snapshot of our working instance as an Amazon Machine Image. The collection of tools and the pipeline script can be executed by executing stored amazon instance AMI # XXX-XXX-XXX. (VRTODO)
+This program depends on a large number of pre-existings software packages. Therefore, to simplify the process, we offer the snapshot of our working instance as an Amazon Machine Image. The collection of tools and the pipeline script can be executed by creating an instance of the pre-configured, freely available amazon machine image AMI # XXX-XXX-XXX. (VRTODO)
 
 # Example
 
@@ -17,7 +17,7 @@ An example invocation of the meta-analysis package can be found in
 
 # Input
 
-MetaNetVar can accept any of the following forms of input:
+MetaNetVar is currently configured and tested to work with NCBI's dbGaP format input data (PLINK-format association file). But, MetaNetVar can also accept any of the following forms of input (if appropriate parameters are tweaked);
 
 ## PLINK-formatted association file:  (http://pngu.mgh.harvard.edu/~purcell/plink/)
             # NCBI dbGaP analysis accession:	pha002890
