@@ -6,6 +6,8 @@ This pipeline was developed by: Vijayaraj Nagarajan PhD, Vojtech Huser MD PhD, E
 #Introduction
 This pipeline allows users to access multiple tools for applying network analysis to human genomic datasets using one simple command-line based program. The pipeline is designed to take different user input formats like a list of genes, single-nucleutide polymorphisms, or variant loci, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. This pilot version has been tested on case-control GWAS data obtained from NCBI's dbGaP. Potential associations among the variants (nodes) from the users input are derived by the included programs, using reference databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.). 
 
+MetNetVar uses a set of converters to generate the input files (from one single user specified association file) for all the included programs, passes them to those programs and collects the output from them.
+
 #Dependencies
 This program depends on a large number of pre-existings software packages. Therefore, to simplify the process, we offer the snapshot of our working instance as an Amazon Machine Image. The collection of tools and the pipeline script can be executed by creating an instance of the pre-configured, freely available amazon machine image AMI # XXX-XXX-XXX. (VRTODO)
 
@@ -17,7 +19,7 @@ An example invocation of the meta-analysis package can be found in
 
 # Input
 
-MetaNetVar is currently configured and tested to work with NCBI's dbGaP format input data (PLINK-format association file). But, MetaNetVar can also accept any of the following forms of input (if appropriate parameters are tweaked);
+MetaNetVar is currently configured and tested to work with NCBI's dbGaP format input data (PLINK-format association file).But, MetaNetVar can also accept any of the following forms of input (if appropriate parameters are tweaked);
 
 ## PLINK-formatted association file:  (http://pngu.mgh.harvard.edu/~purcell/plink/)
             # NCBI dbGaP analysis accession:	pha002890
