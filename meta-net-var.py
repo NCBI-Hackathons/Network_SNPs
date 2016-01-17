@@ -79,6 +79,9 @@ def parsed_command_line():
                         help='2 column tab separated no header: gene_name [tab] aggregate_p_value')
     parser.add_argument('--output_dir', type=readable_dir, required=True,
                         help='The output directory where everything will dump its output')
+    parser.add_argument('--dry_run', action='store_true',
+                        help='Do everything but execute the analyzers '+
+                        'and converters')
     return parser.parse_args()
 
 def input_files(parsed_args):
@@ -106,6 +109,16 @@ def path_for_format(input_files, file_format):
     else:
         return f[0].path
 
+is_dry_run = False
+def run_command(command_list):
+    """Run command_list using subprocess.call after printing it to stdout"""
+    print "Command:"," ".join(command_list)
+    if is_dry_run:
+        print "Skipped command because this is a dry run"
+    else:
+        subprocess.call(command_list)
+
+
 def genemania_inter_to_hotnet2_edge(input_file_in_tuple, output_path):
     """Create a new hotnet2_edge formatted file at output_path
 
@@ -122,8 +135,7 @@ def plink_assoc_to_plink_4_funseq(input_file_in_tuple, output_path):
     input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_PLINK_4_FUNSEQ
     command_list=['bash','dbvartofunseq.sh', input_path, output_path]
-    print "Command: "," ".join(command_list)
-    subprocess.call(command_list)
+    run_command(command_list)
 
 def plink_4_funseq_and_location_2_gene_name_to_gene_list(input_files, output_path):
     """Create a new gene_list formatted file at output_path"""
@@ -131,8 +143,7 @@ def plink_4_funseq_and_location_2_gene_name_to_gene_list(input_files, output_pat
     snp_positions=path_for_format(input_files, FMT_PLINK_4_FUNSEQ)
     loc_to_gene=path_for_format(input_files, FMT_LOCATION_2_GENE_NAME)
     command_list=['bash','scripts/gene_name.sh', snp_positions, loc_to_gene, output_path]
-    print "Command: "," ".join(command_list)
-    subprocess.call(command_list)
+    run_command(command_list)
 
 def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
     """Create a new heat_score_json formatted file at output_path"""
@@ -141,8 +152,7 @@ def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
     command_list=['python', '/home/ubuntu/ffrancis/hotnet2/hotnet2/generateHeat.py',
                     'mutation', '--snv_file', input_path, '--output_file',
                      output_path]
-    print "Command: "," ".join(command_list)
-    subprocess.call(command_list)
+    run_command(command_list)
 
 class Conversion(object):
     def __init__(self, input_formats, output_format, function):
@@ -201,6 +211,8 @@ def all_inputs(starting_input_files, converters, path_for_created):
             old_num_formats = new_num_formats
     return files
 
+
+
 class Analyzer(object):
     def  __init__(self):
        pass
@@ -233,9 +245,7 @@ class Hotnet2(Analyzer):
                         '--infmat_file',influence,'--infmat_index_file',g_index,
                         '--heat_file',heat_score,'--deltas','0.1',
                          '--min_cc_size','1','--output_directory',output_dir, 'none']
-        print "Command:"," ".join(command_list)
-        subprocess.call(command_list)
-
+        run_command(command_list)
 
 class Networkx(Analyzer):
     def requires(self):
@@ -246,8 +256,7 @@ class Networkx(Analyzer):
         gene_net_2_col = path_for_format(input_files, FMT_2_COL_GENE_NETWORK)
         command_list = ["python","scripts/network_snps.py","--input",gene_list,
                          "--network",gene_net_2_col, "--out", output_dir]
-        print "Command:"," ".join(command_list)
-        subprocess.call(command_list)
+        run_command(command_list)
 
 
 class Funseq2(Analyzer):
@@ -259,8 +268,7 @@ class Funseq2(Analyzer):
         command_list=['/home/ubuntu/graphanalytics/funseq2/funseq2-1.2/funseq2',
                       '-f',os.path.abspath(input_file),
                       '-inf','bed','-o',os.path.abspath(output_dir)]
-        print "Command:"," ".join(command_list)
-        subprocess.call(command_list)
+        run_command(command_list)
 
 
 
@@ -272,6 +280,7 @@ analyzers = {
 
 parsed = parsed_command_line()
 print ",".join([str(i) for i in input_files(parsed)])
+is_dry_run = parsed.dry_run
 avail = input_files(parsed)
 # Hard-coded paths
 avail.append(InputFile(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat'))
