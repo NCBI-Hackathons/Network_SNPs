@@ -5,6 +5,7 @@ import os
 import tempfile
 import shutil
 import subprocess
+import sys
 
 # Constants giving names of file formats
 FMT_PLINK_ASSOC = 'plink_assoc' # Treated as a list of locations to use
@@ -82,6 +83,11 @@ def parsed_command_line():
     parser.add_argument('--dry_run', action='store_true',
                         help='Do everything but execute the analyzers '+
                         'and converters')
+    parser.add_argument('--exclude_analyzer', type=str, action='append',
+                        help='Exclude a given analyzer from running even if '+
+                        'its prerequisites are satisfied. If a non-existent '+
+                        'analyzer like "this-is-not-an-analyzer" is given, '+
+                        'prints a list of the available analyzers')
     return parser.parse_args()
 
 def input_files(parsed_args):
@@ -279,24 +285,47 @@ analyzers = {
 }
 
 parsed = parsed_command_line()
-print ",".join([str(i) for i in input_files(parsed)])
 is_dry_run = parsed.dry_run
+excluded_analyzers = set(parsed.exclude_analyzer)
+
+# Check that all excluded analyzers all are legal names
+analyzer_names = set(a.__class__.__name__ for a in analyzers)
+illegal_excluded_names = excluded_analyzers - analyzer_names
+if illegal_excluded_names:
+    analyzer_noun = "analyzers" if len(illegal_excluded_names) > 1 \
+                    else "analyzer"
+    print "Cannot exclude the non-existent "+analyzer_noun+":",",".join(
+        illegal_excluded_names)
+    print "Legal analyzers are:",", ".join(analyzer_names)
+    sys.exit(-1)
+
+print "Available input files: "
+print ",".join([str(i) for i in input_files(parsed)])
 avail = input_files(parsed)
-# Hard-coded paths
+
+# Add Hard-coded paths
 avail.append(InputFile(FMT_HOTNET2_INFLUENCE_MAT,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_influence_matrix_0.40.mat'))
 avail.append(InputFile(FMT_HOTNET2_GENE_INDEX,'/home/ubuntu/ffrancis/hotnet2/hotnet2/manuscript_files/hint+hi2012_index_file.txt'))
 avail.append(InputFile(FMT_2_COL_GENE_NETWORK,'/home/ubuntu/Data/geneMania.network'))
 avail.append(InputFile(FMT_GENE_LIST,'/home/ubuntu/oscarlr/Network_SNPs/Network_SNPs/test/gene_names'))
+
 possible = possible_inputs([a.file_format for a in avail], converters)
 temp_dir_path = tempfile.mkdtemp(prefix='meta-net-var')
-print "Possible: "+",".join(sorted(list(possible)));
-print "Could run:" + ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
-print "Converting inputs"
+print "Available inputs after conversion: "
+print ",".join(sorted(list(possible)))
+
+print "Analyzers that can run with inputs after conversion:"
+print ",".join(a.__class__.__name__ for a in analyzers if a.can_run_with(possible))
+
+print "\nConverting inputs\n"
 inputs = all_inputs(avail, converters, temp_dir_path)
 print "Files after conversions:",",".join(f.path for f in inputs)
 for analyzer in analyzers:
     if analyzer.can_run_with(formats(inputs)):
         a_name = analyzer.__class__.__name__
+        if a_name in excluded_analyzers:
+            print "Skipping excluded analyzer:", a_name
+            continue
         print "Running", a_name
         a_path = os.path.join(parsed.output_dir, a_name)
         try:
