@@ -296,7 +296,15 @@ for analyzer in analyzers:
         except OSError:
             print "Could not run", a_name, "because", a_path, " was already in existence"
 
-print "Could not run:" + ",".join(a.__class__.__name__+" is missing:"+",".join(a.missing(possible)) for a in analyzers if not a.can_run_with(possible))
+analyzers_without_prereq = [a for a in analyzers if not
+                            a.can_run_with(possible)]
+if analyzers_without_prereq:
+    print "Some analyzers could not run because they were "
+    print "missing prerequisites:", \
+        ",".join(a.__class__.__name__+" is missing:" + 
+        ",".join(a.missing(possible)) for a in analyzers_without_prereq)
+print "Finished running analyzers"
+
 #print 'Not removing temp directory for debugging:'
 #print 'Tempdir is:'
 #print temp_dir_path
