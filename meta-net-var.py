@@ -41,8 +41,28 @@ FMT_GENE_PVALUE='gene_pvalue_file' # 2 column tab separated
 
 FMT_HOTNET2_INFLUENCE_MAT='hotnet_influence_mat'
 
-
 FMT_HEAT_SCORE_JSON='hotnet_heat_score_json'
+
+FMT_SNP_PVALUE='snp_pvalue_file' # 2 column tab-separated no header
+                                 # snp id e.g. rs268
+                                 # pvalue asd float in decimal
+                                 # Used as input to vegas
+
+FMT_VEGAS_GENE_ASSOC='vegas_gene_association' # Output of vegas app
+                                              # 10 column space-separated 
+                                              # with header. Strings surrounded
+                                              # by double quotes
+                                              # Columns:
+                                              # Chr - string
+                                              # Gene - string
+                                              # nSNPs - integer
+                                              # nSims - integer
+                                              # Start - integer
+                                              # Stop - integer
+                                              # Test - double precision
+                                              # Pvalue - 3-digit float
+                                              # Best-SNP - string
+                                              # SNP-pvalue - double precision
 
 class InputFile(object):
     """Represents a data in a specified format"""
@@ -160,6 +180,22 @@ def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
                      output_path]
     run_command(command_list)
 
+def plink_assoc_to_snp_pvalue(input_file_in_tuple, output_path):
+    """Create a new snp_pvalue formatted file at output_path"""
+    input_path = input_file_in_tuple[0].path
+    print "Converting "+input_path+" to "+FMT_SNP_PVALUE
+    run_command(['scripts/BASH1_SNPAssociationToSNPPvalues.R', input_path,
+                 '1','2', output_path])
+
+def snp_pvalue_to_vegas_gene_assoc(input_file_in_tuple, output_path):
+    """Create a new vegas_gene_assoc formatted file at output_path """
+    input_path = input_file_in_tuple[0].path
+    print "Converting "+input_path+" to "+FMT_VEGAS_GENE_ASSOC
+    run_command(['scripts/BASH2_VEGAS.sh', input_path, output_path])
+    
+#FMT_SNP_PVALUE='snp_pvalue_file' # 2 column tab-separated no header
+#FMT_VEGAS_GENE_ASSOC='vegas_gene_association' # Output of vegas app
+
 class Conversion(object):
     def __init__(self, input_formats, output_format, function):
         self.input_formats = input_formats
@@ -175,6 +211,10 @@ converters = (
 #               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
     Conversion((FMT_PLINK_ASSOC,),
                FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
+    Conversion((FMT_PLINK_ASSOC,),
+               FMT_SNP_PVALUE, plink_assoc_to_snp_pvalue),
+    Conversion((FMT_SNP_PVALUE,),
+               FMT_VEGAS_GENE_ASSOC, snp_pvalue_to_vegas_gene_assoc),
     Conversion((FMT_GENE_PVALUE,),
                FMT_HEAT_SCORE_JSON, gene_pvalue_to_heat_score_json),
 )
