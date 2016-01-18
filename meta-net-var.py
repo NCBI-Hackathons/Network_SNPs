@@ -202,7 +202,12 @@ def snp_pvalue_to_vegas_gene_assoc(input_file_in_tuple, output_path):
     print "Converting "+input_path+" to "+FMT_VEGAS_GENE_ASSOC
     run_command(['scripts/BASH2_VEGAS.sh', input_path, output_path])
     
-#FMT_SNP_PVALUE='snp_pvalue_file' # 2 column tab-separated no header
+def vegas_gene_assoc_to_gene_pvalue(input_file_in_tuple, output_path):
+    """Create a new gene_pvalue formatted file at output_path """
+    input_path = input_file_in_tuple[0].path
+    print "Converting "+input_path+" to "+FMT_GENE_PVALUE
+    run_command(['scripts/BASH3_ConverterVEGASToGenesPvalues.R', input_path, output_path])
+    
 #FMT_VEGAS_GENE_ASSOC='vegas_gene_association' # Output of vegas app
 
 class Conversion(object):
@@ -220,10 +225,12 @@ converters = (
 #               FMT_HOTNET2_EDGE,genemania_inter_to_hotnet2_edge),
     Conversion((FMT_PLINK_ASSOC,),
                FMT_PLINK_4_FUNSEQ, plink_assoc_to_plink_4_funseq),
-#    Conversion((FMT_PLINK_ASSOC,),
-#               FMT_SNP_PVALUE, plink_assoc_to_snp_pvalue),
+    Conversion((FMT_PLINK_ASSOC,),
+               FMT_SNP_PVALUE, plink_assoc_to_snp_pvalue),
     Conversion((FMT_SNP_PVALUE,),
                FMT_VEGAS_GENE_ASSOC, snp_pvalue_to_vegas_gene_assoc),
+    Conversion((FMT_VEGAS_GENE_ASSOC,),
+               FMT_GENE_PVALUE, vegas_gene_assoc_to_gene_pvalue),
     Conversion((FMT_TABBED_GENE_LIST,),
                FMT_HEAT_SCORE_JSON, tabbed_gene_list_to_heat_score_json),
 )
@@ -325,12 +332,21 @@ class Funseq2(Analyzer):
                       '-inf','bed','-o',os.path.abspath(output_dir)]
         run_command(command_list)
 
+class DmGWAS(Analyzer):
+    def requires(self):
+        return (FMT_GENE_PVALUE,FMT_GENEMANIA_INTER,)
+    def run_with(self, input_files, output_dir):
+        print "Running",self.__class__.__name__, "writing to", output_dir
+        pvals = path_for_format(input_files, FMT_GENE_PVALUE)
+        interact = path_for_format(input_files, FMT_GENEMANIA_INTER)
+        run_command(['scripts/BASH4_dmGWAS.R', pvals, interact, output_dir])
 
 
 analyzers = {
     Hotnet2(),
     Networkx(),
-    Funseq2()
+    Funseq2(),
+    DmGWAS(),
 }
 
 parsed = parsed_command_line()
