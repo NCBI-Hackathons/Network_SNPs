@@ -35,8 +35,8 @@ http://vat.gersteinlab.org/index.php
 wget http://pngu.mgh.harvard.edu/~purcell/plink/dist/plink-1.07-x86_64.zip
 
 #### VEGAS: VEGAS (0.8.27):
-wget http://gump.qimr.edu.au/VEGAS/vegas-0.8.27-hapmapCEU.tar.gz 
-tar -xvzf vegas-0.8.27-hapmapCEU.tar.gz
+	wget http://gump.qimr.edu.au/VEGAS/vegas-0.8.27-hapmapCEU.tar.gz 
+	tar -xvzf vegas-0.8.27-hapmapCEU.tar.gz
 
 #### BedTools: BedTools (2.17.0)
 https://code.google.com/p/bedtools/downloads/list
