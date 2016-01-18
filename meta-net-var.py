@@ -326,7 +326,7 @@ analyzers = {
 
 parsed = parsed_command_line()
 is_dry_run = parsed.dry_run
-excluded_analyzers = set(parsed.exclude_analyzer)
+excluded_analyzers = set(parsed.exclude_analyzer) if parsed.exclude_analyzer else set()
 
 # Check that all excluded analyzers all are legal names
 analyzer_names = set(a.__class__.__name__ for a in analyzers)
