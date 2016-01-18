@@ -435,6 +435,12 @@ results.json (https://github.com/NCBI-Hackathons/Network_SNPs/blob/master/delta_
 Citation for NetworkX: [https://networkx.github.io/] 
 Output of our home-grown package that needs a better name
 
+###Running Networkx
+Scripts lives in scripts. The first step is to run:
+
+	| 	./scripts/gene_name.sh <output file from dbvartofunseq.php> data/refSeq.genes <output file>
+
+
 ###output
 3-column file with gene names, degrees and betweenness of genes.
 
