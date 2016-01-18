@@ -213,7 +213,7 @@ install.packages("igraph", repos='http://cran.us.r-project.org')
 install.packages("corpcor", repos='http://cran.us.r-project.org')
 install.packages("plyr", respos='http://cran.us.r-project.org')
 
-       R Package Version
+	       R Package Version
   AnnotationDbi  1.32.3
         Biobase  2.30.0
    BiocGenerics  0.16.1
@@ -283,7 +283,6 @@ install.packages("plyr", respos='http://cran.us.r-project.org')
        survival  2.38-3
        testthat  0.11.0
          xtable   1.8-0
-
 
 
 ###dmGWAS: dmGWAS (3.0):… except we actually want Matt's version from Github, right?
