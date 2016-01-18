@@ -440,13 +440,13 @@ Scripts lives in scripts. The first step is to run:
 
 	./scripts/gene_name.sh <output file from dbvartofunseq.php> <gene coordinates and names> <output file>
 
-"<gene coordinates and names>" is a file with 4 columns chr,start,end,gene name. An example file is from data/refSeq.genes
+"gene coordinates and names" is a file with 4 columns chr,start,end,gene name. An example file is from data/refSeq.genes
 
 The second step is to run:
 	
 	python ./scripts/network_snps.py --input <output file from gene_name.sh> --network <file path to network> --out <output directory>
 
-"<file path to network>" is a file to the network. The format for the input network is: https://networkx.github.io/documentation/latest/reference/readwrite.adjlist.html
+"file path to network" is a file to the network. The format for the input network is: https://networkx.github.io/documentation/latest/reference/readwrite.adjlist.html
 
 ###Output file
 3-column file with gene names, degrees and betweenness of genes.
