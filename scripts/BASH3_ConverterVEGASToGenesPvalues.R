@@ -6,7 +6,7 @@
 args<-commandArgs(trailingOnly=TRUE)
 
 if(as.character(args[1])=="-h"){
-print("This script converts VEGAS output into a simple matrix with 2 columns (Gene Symbol, Summary p-values). The arguments you need are: 1. A VEGAS output file containing a summary of case-control association by gene (e.g., ./VEGAS/TestData_Gene_pvalues.out) 2. An output file directory (e.g., ./Output/ ).  Example syntax: ./BASH3_ConverterVegasToGenesPvalues.R  ./VEGAS/TestData_Gene_pvalues.out  ./Output/  ")
+print("This script converts VEGAS output into a simple matrix with 2 columns (Gene Symbol, Summary p-values). The arguments you need are: 1. A VEGAS output file containing a summary of case-control association by gene (e.g., ./VEGAS/TestData_Gene_pvalues.out) 2. An output file path (e.g., ./Output/my_file ).  Example syntax: ./BASH3_ConverterVegasToGenesPvalues.R  ./VEGAS/TestData_Gene_pvalues.out  ./Output/my_file  ")
 quit()
 }else{}
 
@@ -49,6 +49,6 @@ print("This is what your data looks like after conversion. It should contain onl
 head(geneweight)
 
 #Check if this needs header=F and whether we need to trim down the matrix in order to feed it into dmGWAS or any other program:
-write.table(geneweight, paste(OutputPath, "TestData_OnlyGeneNames_pvalues.txt", sep=""), sep="\t", row.names=FALSE, col.names=TRUE)
+write.table(geneweight, OutputPath, sep="\t", row.names=FALSE, col.names=TRUE)
 
 
