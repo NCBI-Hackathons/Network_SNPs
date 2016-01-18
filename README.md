@@ -11,6 +11,288 @@ MetNetVar uses a set of converters to generate the input files (from one single 
 #Dependencies
 This program depends on a large number of pre-existings software packages. Therefore, to simplify the process, we offer the snapshot of our working instance as an Amazon Machine Image. The collection of tools and the pipeline script can be executed by creating an instance of the pre-configured, freely available amazon machine image AMI # XXX-XXX-XXX. (VRTODO)
 
+##Computing Environment & Speed:
+The base operating system was configured in AWS using Ubuntu 14.04 “Trusty Tahr”, 64-bit Linux as the operating system. “Instance type” (server size) was a m4.10xlarge with 160GB RAM and 40 virtual CPUs. Using this computing environment, a test-run using a PLINK association file containing p-values for ~320,000 SNPs required most of a day to be processed by the most computationally-intensive parts of our pipeline. 
+
+##Installed software:
+We have listed the versions used for our test run, but later versions are likely to also function in our pipeline.
+
+### Gfortran:
+sudo apt-get install gfortran
+
+### C++ Compiler:
+(Anyone know what we used?)
+
+
+###Linux/Unix tools: 
+
+####Built in: sed, awk, grep 
+
+####Variant Annotation Tool: VAT (snpMapper, indelMapper Module)	2.0.1
+http://vat.gersteinlab.org/index.php
+
+#### PLINK: PLINK (1.07-x86_64):
+wget http://pngu.mgh.harvard.edu/~purcell/plink/dist/plink-1.07-x86_64.zip
+
+#### VEGAS: VEGAS (0.8.27):
+wget http://gump.qimr.edu.au/VEGAS/vegas-0.8.27-hapmapCEU.tar.gz 
+tar -xvzf vegas-0.8.27-hapmapCEU.tar.gz
+
+#### BedTools: BedTools (2.17.0)
+https://code.google.com/p/bedtools/downloads/list
+
+#### Tabix: Tabix (0.2.6 and up)
+http://sourceforge.net/projects/samtools/files/tabix/
+
+#### TFM-Pvalue
+http://bioinfo.lifl.fr/TFM/TFMpvalue/
+
+#### bigWigAverageOverBed
+http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/
+
+
+###Perl: Perl version 5 and up
+
+#### Perl package Parallel::ForkManager
+(Required for parallel running). 
+
+####FunSeq2: Funseq2 2.1.2
+tar xvf funseq2.1.2.tar
+
+
+### Python: Python 2.7.10 (from Ananconda)
+/opt/biobuilds - Biobuilds 2015.11 using Anaconda/Conda
+https://github.com/lab7/biobuilds/blob/master/Release-Notes-2015.11.md
+
+The primary Python packages required (and their dependencies) were installed using: 
+http://networkx.github.io/documentation/latest/install.html
+python hotnet2/setup_fortran.py build_src build_ext --inplace
+
+	Python Package	Version
+	abstract-rendering	0.5.1
+	alabaster	0.7.6
+	anaconda-client	1.2.1
+	argcomplete	1.0.0
+	astropy	1.0.6
+	Babel	2.1.1
+	backports-abc	0.4
+	backports.ssl-match-hostname	3.4.0.2
+	beautifulsoup4	4.4.1
+	bitarray	0.8.1
+	blaze	0.8.3
+	bokeh	0.10.0
+	boto	2.38.0
+	Bottleneck	1.0.0
+	cdecimal	2.3
+	cffi	1.2.1
+	clyent	1.2.0
+	colorama	0.3.3
+	conda	3.18.8
+	conda-build	1.18.2
+	conda-env	2.4.5
+	configobj	5.0.6
+	cruzdb	0.5.6
+	cryptography	0.9.1
+	cycler	0.9.0
+	Cython	0.23.4
+	cytoolz	0.7.4
+	datashape	0.4.7
+	decorator	4.0.4
+	docutils	0.12
+	dynd	9b63882
+	enum34	1.0.4
+	fastcache	1.0.2
+	Flask	0.10.1
+	funcsigs	0.4
+	gevent	1.0.1
+	gevent-websocket	0.9.3
+	greenlet	0.4.9
+	grin	1.2.1
+	h5py	2.5.0
+	idna	2
+	ipaddress	1.0.14
+	ipykernel	4.1.1
+	ipython	4.0.1
+	ipython-genutils	0.1.0
+	ipywidgets	4.1.0
+	itsdangerous	0.24
+	jdcal	1
+	jedi	0.9.0
+	Jinja2	2.8
+	jsonschema	2.4.0
+	jupyter	1.0.0
+	jupyter-client	4.1.1
+	jupyter-console	4.0.3
+	jupyter-core	4.0.6
+	llvmlite	0.8.0
+	lxml	3.4.4
+	MarkupSafe	0.23
+	matplotlib	1.5.0
+	mistune	0.7.1
+	multipledispatch	0.4.8
+	MySQL-python	1.2.5
+	nbconvert	4.0.0
+	nbformat	4.0.1
+	networkx	1.1
+	nltk	3.1
+	nose	1.3.7
+	notebook	4.0.6
+	numba	0.22.1
+	numexpr	2.4.4
+	numpy	1.10.1
+	odo	0.3.4
+	openpyxl	2.2.6
+	pandas	0.17.1
+	path.py	0.0.0
+	patsy	0.4.0
+	pep8	1.6.2
+	pexpect	3.3
+	pickleshare	0.5
+	Pillow	3.0.0
+	ply	3.8
+	psutil	3.3.0
+	ptyprocess	0.5
+	py	1.4.30
+	pyasn1	0.1.9
+	pycairo	1.10.0
+	pycosat	0.6.1
+	pycparser	2.14
+	pycrypto	2.6.1
+	pycurl	7.19.5.1
+	pyflakes	1.0.0
+	Pygments	2.0.2
+	pyOpenSSL	0.15.1
+	pyparsing	2.0.3
+	pytest	2.8.1
+	python-dateutil	2.4.2
+	pytz	2015.7
+	PyYAML	3.11
+	pyzmq	14.7.0
+	qtconsole	4.1.1
+	redis	2.10.3
+	requests	2.8.1
+	rope	0.9.4
+	scikit-image	0.11.3
+	scikit-learn	0.17
+	scipy	0.16.0
+	simplegeneric	0.8.1
+	singledispatch	3.4.0.3
+	six	1.10.0
+	snowballstemmer	1.2.0
+	sockjs-tornado	1.0.1
+	Sphinx	1.3.1
+	sphinx-rtd-theme	0.1.7
+	spyder	2.3.8
+	SQLAlchemy	1.0.9
+	statsmodels	0.6.1
+	sympy	0.7.6.1
+	tables	3.2.2
+	terminado	0.5
+	Theano	0.7.0
+	toolz	0.7.4
+	tornado	4.3
+	traitlets	4.0.0
+	ujson	1.33
+	unicodecsv	0.14.1
+	Werkzeug	0.11.2
+	wheel	0.26.0
+	xlrd	0.9.4
+	XlsxWriter	0.7.7
+	xlwt	1.0.0
+
+
+### R: R 3.2.2
+.libPaths(): /opt/BioBuilds-2015.11/lib/R/library
+BioConductor base 3.0
+
+The primary R Packages required (and their dependencies) were installed using:
+source("http://bioconductor.org/biocLite.R")
+biocLite("graph")
+biocLite("BiocParallel")
+install.packages("igraph", repos='http://cran.us.r-project.org')
+install.packages("corpcor", repos='http://cran.us.r-project.org')
+install.packages("plyr", respos='http://cran.us.r-project.org')
+
+       R Package Version
+  AnnotationDbi  1.32.3
+        Biobase  2.30.0
+   BiocGenerics  0.16.1
+  BiocInstaller  1.20.1
+   BiocParallel   1.4.3
+         bitops   1.0-6
+  blockmodeling   0.1.8
+           boot  1.3-17
+        caTools  1.17.1
+          class  7.3-14
+        cluster   2.0.3
+      codetools  0.2-14
+     colorspace   1.2-6
+        corpcor   1.6.8
+         crayon   1.3.1
+            DBI   0.3.1
+      dichromat   2.0-0
+         digest   0.6.9
+         dmGWAS     3.0
+     doParallel  1.0.10
+          EBSeq  1.10.0
+        foreach   1.4.3
+        foreign  0.8-66
+  futile.logger   1.4.1
+ futile.options   1.0.0
+          gdata  2.17.0
+        ggplot2   2.0.0
+         gplots  2.17.0
+          graph  1.48.0
+       gridBase   0.4-7
+         gtable   0.1.2
+         gtools   3.5.0
+         igraph   1.0.1
+        IRanges   2.4.6
+          irlba   2.0.0
+      iterators   1.0.8
+     KernSmooth 2.23-15
+       labeling     0.3
+       lambda.r   1.1.7
+        lattice 0.20-33
+       magrittr     1.5
+           MASS  7.3-44
+         Matrix   1.2-2
+        memoise   0.2.1
+           mgcv   1.8-7
+        munsell   0.4.2
+        mvtnorm   1.0-3
+           nlme 3.1-122
+            NMF  0.20.6
+           nnet  7.3-11
+       pkgmaker    0.22
+           plyr   1.8.3
+         praise   1.0.0
+   RColorBrewer   1.1-2
+           Rcpp  0.12.3
+       registry     0.3
+       reshape2   1.4.1
+       rngtools   1.2.4
+          rpart  4.1-10
+        RSQLite   1.0.0
+      S4Vectors   0.8.7
+         scales   0.3.0
+           snow   0.4-1
+        spatial  7.3-11
+        stringi   1.0-1
+        stringr   1.0.0
+       survival  2.38-3
+       testthat  0.11.0
+         xtable   1.8-0
+
+
+
+###dmGWAS: dmGWAS (3.0):… except we actually want Matt's version from Github, right?
+wget http://bioinfo.mc.vanderbilt.edu/dmGWAS/dmGWAS_3.0.tar.gz
+R CMD INSTALL dmGWAS_3.0.tar.gz
+
+
+
+
 # Example
 
 An example invocation of the meta-analysis package can be found in
