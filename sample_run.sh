@@ -12,4 +12,4 @@ for i in ~/trial/outdir/*; do
 done
 
 # Run with our sample input files
-./meta-net-var.py --plink_assoc_in ~/testdata/phs000182.pha002890.txt --location_2_gene_name ~/Data/geneMania.network --gene_p_value /home/ubuntu/ffrancis/snp_output_file_pval.txt  --output_dir ~/trial/outdir
+./meta-net-var.py --plink_assoc_in ~/testdata/phs000182.pha002890.txt --location_2_gene_name ~/Data/geneMania.network --tabbed_gene_list /home/ubuntu/ffrancis/snp_output_file_pval.txt  --output_dir ~/trial/outdir

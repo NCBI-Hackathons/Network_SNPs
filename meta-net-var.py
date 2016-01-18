@@ -35,9 +35,13 @@ FMT_HOTNET2_GENE_INDEX='hotnet2_gene_index' # 2 col space separated
                                             # gene number (used in edge file)
                                             # gene name (from gene list file)
 
-FMT_GENE_PVALUE='gene_pvalue_file' # 2 column tab separated
+FMT_GENE_PVALUE='gene_pvalue_file' # 2 column tab separated with header
+                                   #
                                    # gene_name
                                    # aggregate_p_value as a float in decimal
+
+FMT_TABBED_GENE_LIST='tabbed_gene_list' # List of gene names separated
+                                        # by tabs
 
 FMT_HOTNET2_INFLUENCE_MAT='hotnet_influence_mat'
 
@@ -96,8 +100,10 @@ def parsed_command_line():
                         help='Path to a protein-protein-interaction network in 3-column genemania output format http://pages.genemania.org/data/')
     parser.add_argument('--location_2_gene_name', type=argparse.FileType('r'),
                         help='mapping of locations to gene names. Must be same names as used in network. 4 column tab separated: chromosme start end gene_name')
-    parser.add_argument('--gene_p_value', type=argparse.FileType('r'),
-                        help='2 column tab separated no header: gene_name [tab] aggregate_p_value')
+    parser.add_argument('--gene_pvalue', type=argparse.FileType('r'),
+                        help='2 column tab separated with header: gene_name [tab] aggregate_p_value')    
+    parser.add_argument('--tabbed_gene_list', type=argparse.FileType('r'),
+                        help='gene names separated by tabs')
     parser.add_argument('--output_dir', type=readable_dir, required=True,
                         help='The output directory where everything will dump its output')
     parser.add_argument('--dry_run', action='store_true',
@@ -122,8 +128,10 @@ def input_files(parsed_args):
         files.append(InputFile(FMT_GENEMANIA_INTER, parsed_args.genemania_prot_prot_in.name))
     if parsed_args.location_2_gene_name:
         files.append(InputFile(FMT_LOCATION_2_GENE_NAME, parsed_args.location_2_gene_name.name))
-    if parsed_args.gene_p_value:
-        files.append(InputFile(FMT_GENE_PVALUE, parsed_args.gene_p_value.name))
+    if parsed_args.gene_pvalue:
+        files.append(InputFile(FMT_GENE_PVALUE, parsed_args.gene_pvalue.name))
+    if parsed_args.tabbed_gene_list:
+        files.append(InputFile(FMT_TABBED_GENE_LIST, parsed_args.tabbed_gene_list.name))
     return files
 
 def path_for_format(input_files, file_format):
@@ -139,6 +147,7 @@ is_dry_run = False
 def run_command(command_list):
     """Run command_list using subprocess.call after printing it to stdout"""
     print "Command:"," ".join(command_list)
+    sys.stdout.flush()
     if is_dry_run:
         print "Skipped command because this is a dry run"
     else:
@@ -171,7 +180,7 @@ def plink_4_funseq_and_location_2_gene_name_to_gene_list(input_files, output_pat
     command_list=['bash','scripts/gene_name.sh', snp_positions, loc_to_gene, output_path]
     run_command(command_list)
 
-def gene_pvalue_to_heat_score_json(input_file_in_tuple, output_path):
+def tabbed_gene_list_to_heat_score_json(input_file_in_tuple, output_path):
     """Create a new heat_score_json formatted file at output_path"""
     input_path = input_file_in_tuple[0].path
     print "Converting "+input_path+" to "+FMT_HEAT_SCORE_JSON
@@ -215,8 +224,8 @@ converters = (
 #               FMT_SNP_PVALUE, plink_assoc_to_snp_pvalue),
     Conversion((FMT_SNP_PVALUE,),
                FMT_VEGAS_GENE_ASSOC, snp_pvalue_to_vegas_gene_assoc),
-    Conversion((FMT_GENE_PVALUE,),
-               FMT_HEAT_SCORE_JSON, gene_pvalue_to_heat_score_json),
+    Conversion((FMT_TABBED_GENE_LIST,),
+               FMT_HEAT_SCORE_JSON, tabbed_gene_list_to_heat_score_json),
 )
 
 def possible_inputs(starting_input_formats, converters):
