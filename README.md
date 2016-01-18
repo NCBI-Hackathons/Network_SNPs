@@ -440,14 +440,15 @@ Scripts lives in scripts. The first step is to run:
 
 	./scripts/gene_name.sh <output file from dbvartofunseq.php> <gene coordinates and names> <output file>
 
-<gene coordinates and names> is a file with 4 columns chr,start,end,gene name. An example file is from data/refSeq.genes
+"<gene coordinates and names>" is a file with 4 columns chr,start,end,gene name. An example file is from data/refSeq.genes
 
 The second step is to run:
 	
-	python ./scripts/network_snps.py --input <output file from gene_name.sh> --network <file path to network> --out <output file>
+	python ./scripts/network_snps.py --input <output file from gene_name.sh> --network <file path to network> --out <output directory>
 
+"<file path to network>" is a file to the network. The format for the input network is: https://networkx.github.io/documentation/latest/reference/readwrite.adjlist.html
 
-###output
+###Output file
 3-column file with gene names, degrees and betweenness of genes.
 
                 # From this output, it would be smart to focus on CD3EAP since it
@@ -463,11 +464,12 @@ The second step is to run:
                 HHIPL2	41	0.000495219919278
                 CYP2B6	41	0.000465664109724
                 CLDN20	17	5.61032381821e-05
-###pngs/
+###Output folders:
+####pngs/
 
 This folder has a figure for each input gene and its neighbor genes.
 
-###xml_format/ 
+####xml_format/ 
 
 This folder has the xml format of the subnetworks in the pngs folder.
 
