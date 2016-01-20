@@ -505,6 +505,9 @@ sample_run.sh
 
 #Appendices
 
+##ClinVar_part folder
+This folder includes R code that extracts data that can be used as possible input list of SNPs to test drive the developed tool. See Readme.MD file in that filde for more info.
+
 ##presentation made on day 2 of hackathon
 (with additional changes on day 3)
  https://docs.google.com/presentation/d/1PzQrERWxcQQvih6TLuF4IBvmNCFe7D253Qm5UWPAWfA/edit?usp=sharing
