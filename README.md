@@ -3,6 +3,8 @@ MetaNetVar is a pipeline for applying network analysis tools for genomic variant
 
 This pipeline was developed by: Vijayaraj Nagarajan PhD, Vojtech Huser MD PhD, Eric Moyer MS, Felix Francis MS, Oscar Rodriguez, Matthew Lesko, Megan Hagenauer PhD, Ben Busby PhD.
 
+A fully working and tested version of MetaNetVar with all components installed and dependencies resolved/patched is available as a public Amazon Machine Image : ami-4510312f . Name: NCBI-Hackathon-20160122-Network-SNPs. 
+
 #Introduction
 This pipeline allows users to access multiple tools for applying network analysis to human genomic datasets using one simple command-line based program. The pipeline is designed to take different user input formats like a list of genes, single-nucleutide polymorphisms, or variant loci, either alone or accompanied by p-values derived from a case-control comparison or quantitative trait loci analysis. This pilot version has been tested on case-control GWAS data obtained from NCBI's dbGaP. Potential associations among the variants (nodes) from the users input are derived by the included programs, using reference databases of molecular interactions (protein-protein interactions, protein-DNA interactions, metabolic interactions, etc.). 
 
