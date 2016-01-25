@@ -11,7 +11,7 @@ This pipeline allows users to access multiple tools for applying network analysi
 MetNetVar uses a set of converters to generate the input files (from one single user specified association file) for all the included programs, passes them to those programs and collects the output from them.
 
 #Dependencies
-This program depends on a large number of pre-existings software packages. Therefore, to simplify the process, we offer the snapshot of our working instance as an Amazon Machine Image. The collection of tools and the pipeline script can be executed by creating an instance of the pre-configured, freely available amazon machine image AMI # XXX-XXX-XXX. (VRTODO)
+This program depends on a large number of pre-existings software packages. Therefore, to simplify the process, we offer the snapshot of our working instance as an Amazon Machine Image. The collection of tools and the pipeline script can be executed by creating an instance of the pre-configured, freely available amazon machine image AMI # ami-4510312f. 
 
 ##Computing Environment & Speed:
 The base operating system was configured in AWS using Ubuntu 14.04 “Trusty Tahr”, 64-bit Linux as the operating system. “Instance type” (server size) was a m4.10xlarge with 160GB RAM and 40 virtual CPUs. Using this computing environment, a test-run using a PLINK association file containing p-values for ~320,000 SNPs required most of a day to be processed by the most computationally-intensive parts of our pipeline. 
